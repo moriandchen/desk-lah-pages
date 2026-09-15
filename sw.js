@@ -1,4 +1,4 @@
-const CACHE_NAME='desk-lah-v1-pwa-20260910-photo-hotfix-004-workdesk-adapter-004-mobile-handoff';
+const CACHE_NAME='desk-lah-v1-pwa-20260915-remote-handoff-007';
 const APP_SHELL=[
   './',
   './index.html',
