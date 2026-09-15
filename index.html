@@ -1,0 +1,3300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FBF8F1">
+  <meta name="application-name" content="Desk Lah!">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Desk Lah!">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <title>Desk Lah!</title>
+  <style>
+:root{
+  --paper:#F3EFE6;
+  --paper2:#FBF8F1;
+  --ink:#262A2B;
+  --muted:#6E7473;
+  --rule:#CFC6B6;
+  --accent:#B55739;
+  --tech:#486A73;
+  --ok:#5E735F;
+  --shadow:rgba(48,43,36,.09);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#EAE5DB 0%,#F2EEE6 100%);color:var(--ink);font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{width:min(1120px,calc(100% - 32px));margin:28px auto 64px;background:var(--paper2);border:1px solid #D8D0C3;min-height:780px;box-shadow:0 18px 55px var(--shadow)}
+header{padding:24px 32px 18px;border-bottom:1px solid var(--rule)}
+.brandrow{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.brand{display:flex;gap:14px;align-items:center}.logo{width:62px;height:48px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.brand h1{font:700 29px Georgia,serif;margin:0;letter-spacing:-.02em}.tag{margin:3px 0 0;color:var(--muted);font-size:12.5px}
+.sync{font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--ok);padding-top:5px;white-space:nowrap;cursor:pointer;user-select:none}
+nav{display:flex;gap:26px;margin-top:18px}nav button{border:0;background:none;padding:8px 0;color:var(--muted);border-bottom:2px solid transparent;font-weight:700}nav button.active{color:var(--ink);border-bottom-color:var(--accent)}
+main{padding:32px}.page{display:none}.page.active{display:block}
+.toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:20px}.eyebrow{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent);letter-spacing:.09em}.toolbar h2,.detail h2{font:26px Georgia,serif;margin:4px 0 0}.sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+.primary{border:1px solid var(--ink);background:var(--ink);color:white;padding:10px 15px;border-radius:2px}.primary:hover{transform:translateY(-1px)}
+.textbtn{border:0;background:none;color:var(--tech);padding:5px 0}.danger{color:#9B4235}.quiet{color:var(--muted)}
+.list{border-top:1px solid var(--ink)}.item{display:flex;justify-content:space-between;align-items:center;padding:20px 4px;border-bottom:1px solid var(--rule);cursor:pointer;transition:.16s}.item:hover{padding-left:11px;background:rgba(255,255,255,.42)}.item h3{font:17px Georgia,serif;margin:0 0 6px}.meta{font-size:12px;color:var(--muted)}
+.empty{display:none;text-align:center;color:var(--muted);font-size:12.5px;padding:72px 10px;border-top:1px solid var(--ink)}
+.form{max-width:790px;border-top:1px solid var(--ink);padding-top:22px}.field{margin-bottom:22px}label{display:block;font-size:12px;font-weight:700;margin-bottom:8px}
+input,textarea,select{width:100%;border:0;border-bottom:1px solid var(--rule);background:transparent;padding:10px 2px;color:var(--ink);outline:none}input:focus,select:focus{border-bottom-color:var(--ink)}textarea{border:1px solid var(--rule);padding:12px;min-height:180px;resize:vertical;line-height:1.7}textarea:focus{border-color:var(--ink)}.actions{display:flex;justify-content:flex-end;gap:14px}
+.uploadbox{border:1px dashed var(--rule);padding:18px}.uploadbox input{border:0;padding:0}.uploadmeta{font-size:11.5px;color:var(--muted);margin-top:8px}
+.preview-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;font-size:11.5px;color:var(--muted)}
+.preview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:10px}
+.preview-photo{position:relative;aspect-ratio:1;border:1px solid var(--rule);background:#EEE8DC;overflow:hidden}
+.preview-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.preview-remove{position:absolute;top:5px;right:5px;width:25px;height:25px;border:1px solid rgba(38,42,43,.14);background:rgba(251,248,241,.92);color:var(--ink);display:grid;place-items:center;padding:0;line-height:1;font-size:16px}
+.preview-remove:hover{color:var(--accent);border-color:var(--accent)}
+.preview-empty{display:none;margin-top:10px;font-size:11.5px;color:var(--muted)}
+.detailhead{border-bottom:1px solid var(--ink);padding-bottom:15px;margin-bottom:26px}.detailgrid{display:grid;grid-template-columns:1.55fr .95fr;gap:42px}.section{font:17px Georgia,serif;margin-bottom:10px}.editor{min-height:360px;border-width:1px 0;line-height:1.9}.rowactions{display:flex;gap:15px;margin-top:14px;align-items:center;flex-wrap:wrap}.convert{border:0;background:var(--tech);color:#fff;padding:10px 14px;border-radius:2px}.footdelete{margin-top:46px;padding-top:16px;border-top:1px solid var(--rule);text-align:right}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.photo{position:relative;aspect-ratio:1;background:linear-gradient(135deg,#D7D0C4,#ECE6DA);border:1px solid var(--rule);display:grid;place-items:center;color:#777;font:700 10px ui-monospace,Consolas,monospace;overflow:hidden}.photo:after{content:"原圖";opacity:.7}.photo:hover{outline:1px solid var(--ink)}.photo .x{position:absolute;top:4px;right:5px;width:20px;height:20px;border:0;background:rgba(251,248,241,.88);color:var(--muted);display:none;place-items:center}.photo:hover .x{display:grid}.photo .x:hover{color:var(--accent)}
+.monthbar{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:13px 2px}.month{font:18px Georgia,serif}.book-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.attendance-tabs{display:flex;gap:26px;border-bottom:1px solid var(--rule);margin-bottom:18px}.subtab{border:0;background:none;padding:9px 1px;color:var(--muted);font-weight:700;border-bottom:2px solid transparent;margin-bottom:-1px}.subtab.active{color:var(--ink);border-bottom-color:var(--accent)}.book{display:none}.book.active{display:block}
+.ot,.leave-row{display:grid;grid-template-columns:92px 1fr auto;gap:22px;padding:18px 4px;border-bottom:1px solid var(--rule);align-items:center}.ot{cursor:pointer;transition:.16s}.ot:hover{padding-left:11px;background:rgba(255,255,255,.42)}.otdate{font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}.otmain strong,.leave-main strong{font-size:14px}.otmain div,.leave-main div{font-size:12.5px;color:var(--muted);margin-top:4px}.ottime{font:12px ui-monospace,SFMono-Regular,Consolas,monospace}.note{font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.6}.monthnav{border:0;background:none;color:var(--muted);padding:4px 8px;font-size:18px;line-height:1}.monthnav:hover{color:var(--ink)}.monthwrap{display:flex;align-items:center;gap:7px}.ot-empty{text-align:center;color:var(--muted);font-size:12.5px;padding:55px 10px;border-bottom:1px solid var(--rule)}.ot-local-badge{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--tech);letter-spacing:.06em}.ot-delete{margin-top:32px;padding-top:14px;border-top:1px solid var(--rule);text-align:right}
+.leave-summary{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:30px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:18px 2px}.leave-year{font:18px Georgia,serif}.balance-line{display:flex;gap:34px;font-size:12.5px}.balance-line div{display:flex;gap:8px;align-items:baseline}.balance-line strong{font:600 18px Georgia,serif}.remain,.minus{color:var(--accent)}.plus{color:var(--tech)}.minus,.plus{font:700 13px ui-monospace,SFMono-Regular,Consolas,monospace}.leave-row{cursor:pointer;transition:.16s}.leave-row:hover{padding-left:11px;background:rgba(255,255,255,.42)}.leave-empty{text-align:center;color:var(--muted);font-size:12.5px;padding:55px 10px;border-bottom:1px solid var(--rule)}.leave-local-badge{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--tech);letter-spacing:.06em}.leave-delete{margin-top:32px;padding-top:14px;border-top:1px solid var(--rule);text-align:right}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}.timepair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}.timepair span{padding-bottom:10px;color:var(--muted)}
+footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--muted)}
+.toast{position:fixed;right:24px;bottom:24px;background:var(--ink);color:#fff;padding:12px 16px;font-size:12px;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateY(0)}
+.modal{position:fixed;inset:0;background:rgba(25,26,26,.6);display:none;place-items:center;padding:24px;z-index:20}.modal.show{display:grid}.modalbox{width:min(780px,94vw);aspect-ratio:4/3;background:#E3DED4;border:1px solid #BFB5A7;box-shadow:0 20px 70px rgba(0,0,0,.25);position:relative;display:grid;place-items:center;color:#6A6D6C;font:700 13px ui-monospace,Consolas,monospace}.modalclose{position:absolute;right:14px;top:10px;border:0;background:transparent;font-size:26px;color:var(--ink)}
+.mobile-only{display:none}
+
+.cloud-gate{position:fixed;inset:0;background:rgba(38,42,43,.48);display:none;place-items:center;padding:22px;z-index:60;backdrop-filter:blur(3px)}
+.cloud-gate.show{display:grid}.cloud-card{width:min(560px,96vw);max-height:92vh;overflow:auto;background:var(--paper2);border:1px solid var(--rule);box-shadow:0 22px 70px rgba(0,0,0,.22);padding:28px}.cloud-card h2{font:26px Georgia,serif;margin:4px 0 8px}.cloud-card .cloud-step{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent);letter-spacing:.09em}.cloud-card .cloud-help{font-size:12.5px;color:var(--muted);line-height:1.65;margin:0 0 22px}.cloud-card .cloud-actions{display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:18px}.cloud-card .cloud-error{min-height:18px;color:var(--accent);font-size:12px;margin-top:12px}.cloud-card .cloud-success{color:var(--ok)}.cloud-card code{font:11.5px ui-monospace,SFMono-Regular,Consolas,monospace;background:#EEE8DD;padding:2px 5px}.cloud-sql{width:100%;min-height:260px;border:1px solid var(--rule);background:#F4F0E7;padding:12px;font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;resize:vertical}.cloud-test{font-size:11.5px;color:var(--tech);border:1px solid var(--rule);background:transparent;padding:8px 10px;border-radius:2px}.cloud-test:hover{border-color:var(--tech)}.toolbar-actions{display:flex;gap:12px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.cloud-divider{height:1px;background:var(--rule);margin:24px 0}.cloud-mini{font-size:11px;color:var(--muted);line-height:1.6}.cloud-user{font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-top:8px;word-break:break-all}
+@media(max-width:760px){
+  body{background:var(--paper2)}.app{width:100%;margin:0;border:0;min-height:100vh;box-shadow:none}.tag{display:none}header{padding:18px}.brand h1{font-size:24px}.logo{width:52px}main{padding:22px 18px}.toolbar{align-items:center}.toolbar h2{font-size:24px}.detailgrid,.twocol{grid-template-columns:1fr}.detailgrid{gap:28px}.ot,.leave-row{grid-template-columns:65px 1fr;gap:12px}.ottime,.leave-row .minus,.leave-row .plus{grid-column:2}.leave-summary{grid-template-columns:1fr auto;gap:14px}.balance-line{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:10px;flex-wrap:wrap}.book-actions{gap:8px}.desktop-only{display:none!important}.mobile-only{display:inline}.photos{grid-template-columns:repeat(4,1fr)}.preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.preview-remove{display:grid}.primary{padding:10px 13px}
+  .mobile-workdesk-handoff{
+    display:flex!important;
+    justify-content:flex-end;
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--rule);
+  }
+}
+/* Phase 2.7: Desktop in-place Simplified → Traditional + session undo + copy text. */
+.detail-photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.detail-photo{aspect-ratio:1;border:1px solid var(--rule);background:#EEE8DC;overflow:hidden}
+.detail-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.detail-photo-meta{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.detail-photo-empty{font-size:12px;color:var(--muted);padding:18px 0}
+
+.detail-photo{position:relative;cursor:zoom-in}
+.detail-photo-remove{position:absolute;top:5px;right:5px;width:25px;height:25px;border:1px solid rgba(38,42,43,.14);background:rgba(251,248,241,.94);color:var(--ink);display:none;place-items:center;padding:0;line-height:1;font-size:16px;z-index:2;cursor:pointer}
+.detail-photo:hover .detail-photo-remove{display:grid}
+.detail-photo-remove:hover{color:var(--accent);border-color:var(--accent)}
+.detail-photo-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.detail-photo-tools input{display:none}
+.photo-modalbox{width:min(980px,94vw);height:min(82vh,760px);aspect-ratio:auto;background:#171818;border:0;display:flex;align-items:center;justify-content:center;padding:34px;overflow:hidden}
+.photo-modalbox img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.photo-modalbox .modalclose{color:white;background:rgba(0,0,0,.28);width:34px;height:34px;line-height:30px;border-radius:50%}
+@media(max-width:760px){.detail-photos{grid-template-columns:repeat(3,minmax(0,1fr))}.detail-photo-remove{display:grid}.photo-modalbox{padding:20px;height:min(78vh,680px)}}
+.draft-row{cursor:pointer}
+.detail-title-input{width:100%;border:0;border-bottom:1px solid transparent;background:transparent;padding:2px 0 4px;color:var(--ink);font:26px Georgia,serif;outline:none}
+.detail-title-input:focus{border-bottom-color:var(--rule)}
+.detail-savebar{display:flex;justify-content:flex-end;margin-top:14px}
+.mobile-workdesk-handoff{display:none}
+.mobile-workdesk-btn{
+  border:1px solid var(--rule);
+  background:transparent;
+  color:var(--tech);
+  padding:10px 13px;
+  border-radius:2px;
+  font-size:13px;
+  font-weight:600;
+}
+.mobile-workdesk-btn:active{transform:translateY(1px)}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brandrow">
+    <div class="brand">
+      <div class="logo" aria-label="Desk Lah! logo">
+        <svg viewBox="0 0 72 56" width="58" height="46" aria-hidden="true">
+          <path d="M15 44 H39" fill="none" stroke="#262A2B" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M23 43 L26 26" fill="none" stroke="#262A2B" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M26 26 L39 14" fill="none" stroke="#262A2B" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="26" cy="26" r="2.5" fill="#FBF8F1" stroke="#262A2B" stroke-width="1.8"/>
+          <path d="M37 10 C44 8,50 12,52 18 L38 24 C36 20,34 15,37 10 Z" fill="#D9B9A5" stroke="#262A2B" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M42 24 L38 31" fill="none" stroke="#B55739" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+          <path d="M37 38 L59 36 L61 47 L39 49 Z" fill="#FBF8F1" stroke="#B55739" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M34 41 L56 39 L58 50 L36 52 Z" fill="#FBF8F1" stroke="#262A2B" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M39 45 L52 44" fill="none" stroke="#CFC6B6" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M40 48 L50 47" fill="none" stroke="#CFC6B6" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div><h1>Desk Lah!</h1><p class="tag">把手機裡的工作，帶回桌面。</p></div>
+    </div>
+    <div class="sync quiet" id="syncState" role="button" tabindex="0" title="Cloud 連線設定" onclick="openDeskCloudPanel()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDeskCloudPanel()}">CLOUD SETUP</div>
+  </div>
+  <nav><button class="active" data-page="drafts">稿件桌</button><button data-page="attendance">出勤簿</button></nav>
+</header>
+<main>
+
+<section class="page active" id="drafts">
+  <div class="toolbar">
+    <div><div class="eyebrow">DRAFT DESK</div><h2>稿件桌</h2></div>
+    <div class="toolbar-actions"><button class="primary" onclick="showPage('newDraft')"><span class="desktop-only">＋ 新增稿件</span><span class="mobile-only">＋</span></button></div>
+  </div>
+  <div class="list" id="draftList"></div>
+  <div class="empty" id="draftEmpty">桌上暫時沒有稿件。</div>
+</section>
+
+<section class="page" id="newDraft">
+  <button class="textbtn" onclick="showPage('drafts')">← 稿件桌</button>
+  <div class="toolbar"><div><div class="eyebrow">NEW DRAFT</div><h2>新增稿件</h2><div class="sub">手機階段只負責：塞進來。</div></div></div>
+  <div class="form">
+    <div class="field"><label>稿件名稱 *</label><input id="draftName" placeholder="例如：Central Park 活動"></div>
+    <div class="field"><label>文字</label><textarea id="draftBody" placeholder="直接打稿……"></textarea></div>
+    <div class="field">
+      <label>原圖</label>
+      <div class="uploadbox">
+        <input id="draftPhotoInput" type="file" accept="image/*" multiple>
+        <div class="uploadmeta">原圖會以原始 File / Blob 寫入本機 IndexedDB；縮圖只用於預覽，不壓縮、不替代原檔。</div>
+        <div class="preview-head"><span id="draftPhotoCount">尚未選圖</span><button class="textbtn quiet" id="clearDraftPhotosBtn" type="button" onclick="clearSelectedPhotos()" style="display:none">全部移除</button></div>
+        <div class="preview-grid" id="draftPhotoPreview"></div>
+      </div>
+    </div>
+    <div class="actions"><button class="textbtn" onclick="cancelNewDraft()">取消</button><button class="primary" onclick="saveDraft()">保存</button></div>
+  </div>
+</section>
+
+<section class="page detail" id="detail">
+  <button class="textbtn" onclick="showPage('drafts')">← 稿件桌</button>
+  <div class="detailhead"><div class="eyebrow">ON DESK</div><input class="detail-title-input" id="detailTitleInput" aria-label="稿件名稱"><div class="sub" id="detailMeta"></div></div>
+  <div class="detailgrid">
+    <div>
+      <div class="section">文字</div>
+      <textarea class="editor" id="draftText"></textarea>
+      <div class="rowactions desktop-only">
+        <button class="convert" type="button" onclick="convertDraftTextToTraditional()">簡 → 繁</button>
+        <button class="textbtn" type="button" onclick="copyDraftText()">複製文字</button>
+        <button class="textbtn" id="sendToWorkDeskBtn" type="button" onclick="sendCurrentDraftToForestWorkDesk(event)" title="交給 Forest Studio Work Desk · 按住 Shift 可重新設定 Work Desk URL">Send to Work Desk →</button>
+        <button class="textbtn quiet" id="undoConversionBtn" type="button" onclick="undoDraftTextConversion()" style="display:none">撤銷本次轉換</button>
+      </div>
+      <div class="detail-savebar"><button class="textbtn" onclick="saveDraftEdits()">保存修改</button></div>
+      <div class="mobile-workdesk-handoff">
+        <button class="mobile-workdesk-btn" type="button"
+          onclick="sendCurrentDraftToForestWorkDesk(event)"
+          title="送到 Forest Studio Work Desk">送到 Work Desk →</button>
+      </div>
+    </div>
+    <div>
+      <div class="section">原圖</div>
+      <div class="detail-photos" id="detailPhotos"></div>
+      <div class="detail-photo-empty" id="detailPhotoEmpty">暫時沒有原圖。</div>
+      <div class="detail-photo-tools">
+        <div class="detail-photo-meta" id="detailPhotoMeta"></div>
+        <div class="rowactions">
+          <input id="detailPhotoInput" type="file" accept="image/*" multiple>
+          <button class="textbtn" type="button" onclick="document.getElementById('detailPhotoInput').click()">＋ 補加原圖</button>
+          <button class="primary" type="button" onclick="downloadAllOriginalPhotos()">下載全部原圖</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footdelete"><button class="textbtn danger" onclick="deleteCurrentDraft()">刪除稿件</button></div>
+</section>
+
+<section class="page" id="attendance">
+  <div class="toolbar"><div><div class="eyebrow">ATTENDANCE BOOK</div><h2>出勤簿</h2><div class="sub">加班記一次，假期記一次。</div></div></div>
+  <div class="attendance-tabs"><button class="subtab active" onclick="switchBook('otBook',this)">加班</button><button class="subtab" onclick="switchBook('leaveBook',this)">假期</button></div>
+
+  <div id="otBook" class="book active">
+    <div class="monthbar">
+      <div class="monthwrap"><button class="monthnav" type="button" aria-label="上一個月" onclick="changeOTMonth(-1)">‹</button><div class="month" id="otMonthLabel">2026 · 9月</div><button class="monthnav" type="button" aria-label="下一個月" onclick="changeOTMonth(1)">›</button></div>
+      <div class="book-actions"><span class="ot-local-badge">CLOUD + EXPORT</span><button class="textbtn desktop-only" type="button" onclick="exportOTClaimExcel()">導出 OT Claim</button><button class="primary" onclick="openNewOTForm()">＋ 記一筆</button></div>
+    </div>
+    <div id="otLedger"></div>
+    <div class="ot-empty" id="otEmpty">這個月暫時沒有加班紀錄。</div>
+    <div class="note">加班紀錄會在同一帳號的裝置之間自動同步。月底按「導出 OT Claim」，Desk Lah! 會直接把當月資料寫進公司原有 Excel 範本；金額仍留給公司規則 / 手動填寫。</div>
+  </div>
+
+  <div id="leaveBook" class="book">
+    <div class="leave-summary">
+      <div class="leave-year" id="leaveYearLabel">2026 假期</div>
+      <div class="balance-line">
+        <div><span>年假</span><strong id="annualAllowanceValue">22</strong><span>→ 剩</span><strong class="remain" id="annualRemainingValue">22 天</strong></div>
+        <div><span>補假</span><span>已獲得</span><strong id="replacementEarnedValue">0</strong><span>→ 剩</span><strong class="remain" id="replacementRemainingValue">0 天</strong></div>
+      </div>
+      <div class="book-actions"><span class="leave-local-badge">CLOUD</span><button class="primary" onclick="openNewLeaveForm()">＋ 記假期</button></div>
+    </div>
+    <div id="leaveLedger"></div>
+    <div class="leave-empty" id="leaveEmpty">今年暫時沒有假期紀錄。</div>
+    <div class="note">只有整天假：1、2、3…天。年假年度額度固定為 22 天；補假用「獲得 / 使用」交易計算。沒有半天、上午 / 下午、審批流程或狀態。</div>
+  </div>
+</section>
+
+<section class="page" id="newOT">
+  <button class="textbtn" onclick="returnToOTBook()">← 加班簿</button>
+  <div class="toolbar"><div><div class="eyebrow" id="otFormEyebrow">NEW OT RECORD</div><h2 id="otFormTitle">記一筆加班</h2></div></div>
+  <div class="form">
+    <div class="twocol"><div class="field"><label>日期</label><input id="otWorkDate" type="date"></div><div class="field"><label>時間</label><div class="timepair"><input id="otStartTime" type="time"><span>—</span><input id="otEndTime" type="time"></div></div></div>
+    <div class="field"><label>節目 / 工作</label><input id="otProgramme" placeholder="例如：中秋晚會直播"></div>
+    <div class="field"><label>地點</label><input id="otLocation" placeholder="例如：Central Park"></div>
+    <div class="actions"><button class="textbtn" onclick="returnToOTBook()">取消</button><button class="primary" onclick="saveOTRecord()">保存</button></div>
+    <div class="ot-delete" id="otDeleteArea" style="display:none"><button class="textbtn danger" type="button" onclick="deleteCurrentOTRecord()">刪除這筆加班</button></div>
+  </div>
+</section>
+
+<section class="page" id="newLeave">
+  <button class="textbtn" onclick="returnToLeaveBook()">← 假期簿</button>
+  <div class="toolbar"><div><div class="eyebrow" id="leaveFormEyebrow">LEAVE RECORD</div><h2 id="leaveFormTitle">記一筆假期</h2><div class="sub">只記真正存在的情況：整天。</div></div></div>
+  <div class="form">
+    <div class="twocol"><div class="field"><label>日期</label><input id="leaveDate" type="date"></div><div class="field"><label>類型</label><select id="leaveType"><option value="annual_use">年假</option><option value="replacement_use">使用補假</option><option value="replacement_earn">獲得補假</option></select></div></div>
+    <div class="twocol"><div class="field"><label>天數</label><input id="leaveDays" type="number" min="1" step="1" inputmode="numeric" value="1"></div><div class="field"><label>備註（可空）</label><input id="leaveNote" placeholder="例如：旅行 / 私人安排"></div></div>
+    <div class="actions"><button class="textbtn" onclick="returnToLeaveBook()">取消</button><button class="primary" onclick="saveLeaveRecord()">保存</button></div>
+    <div class="leave-delete" id="leaveDeleteArea" style="display:none"><button class="textbtn danger" type="button" onclick="deleteCurrentLeaveRecord()">刪除這筆假期</button></div>
+  </div>
+</section>
+
+</main>
+<footer>Desk Lah! · 把手機裡的工作，帶回桌面。</footer>
+</div>
+<div id="cloudGate" class="cloud-gate" aria-modal="true" role="dialog">
+  <div class="cloud-card">
+    <div class="cloud-step">DESK LAH! CLOUD</div>
+    <h2>連接你的工作中轉桌</h2>
+    <p class="cloud-help">登入後，稿件與原圖會在同一帳號的裝置之間自動同步。</p>
+
+    <div id="cloudConfigStep">
+      <div class="field"><label>Supabase Project URL</label><input id="cloudUrl" type="url" autocomplete="off" placeholder="https://xxxx.supabase.co"></div>
+      <div class="field"><label>Publishable / public anon key</label><textarea id="cloudAnonKey" style="min-height:100px" autocomplete="off" placeholder="只貼 Publishable / public anon key；不要使用 secret / service_role key。"></textarea></div>
+      <p class="cloud-mini">Desk Lah! 現在使用獨立的 Supabase Project。請填入 <code>forest-studio-desk-lah</code> 的 Project URL 與 Publishable key；不要使用 secret / service_role key。</p>
+      <div class="cloud-actions"><button class="primary" type="button" onclick="saveCloudConfig()">保存連線設定</button></div>
+    </div>
+
+    <div id="cloudLoginStep" style="display:none">
+      <div class="field"><label>Email</label><input id="cloudEmail" type="email" autocomplete="username" placeholder="Forest OS 使用的登入 Email"></div>
+      <div class="field"><label>Password</label><input id="cloudPassword" type="password" autocomplete="current-password" placeholder="密碼"></div>
+      <div class="cloud-actions"><button class="textbtn quiet" type="button" onclick="resetCloudConfig()">重設連線</button><button class="primary" type="button" onclick="signInDeskCloud()">登入</button></div>
+    </div>
+
+    <div id="cloudTableStep" style="display:none">
+      <p class="cloud-help">Cloud 初始化尚未完成。請檢查 Desk Lah! 的資料表設定後再試。</p>
+      <textarea id="cloudSqlText" class="cloud-sql" readonly style="display:none"></textarea>
+      <div class="cloud-actions"><button class="primary" type="button" onclick="recheckDeskDraftTable()">重新檢查</button></div>
+    </div>
+
+    <div id="cloudStorageStep" style="display:none">
+      <p class="cloud-help">Cloud 原圖儲存尚未完成。請檢查 Desk Lah! 的 Storage 設定後再試。</p>
+      <textarea id="cloudStorageSqlText" class="cloud-sql" readonly style="display:none"></textarea>
+      <div class="cloud-actions"><button class="primary" type="button" onclick="recheckDeskStorage()">重新檢查</button></div>
+    </div>
+
+    <div id="cloudPhotoTableStep" style="display:none">
+      <p class="cloud-help">Cloud 原圖資料索引尚未完成。請檢查 Desk Lah! 的照片資料設定後再試。</p>
+      <textarea id="cloudPhotoSqlText" class="cloud-sql" readonly style="display:none"></textarea>
+      <div class="cloud-actions"><button class="primary" type="button" onclick="recheckDeskPhotoTable()">重新檢查</button></div>
+    </div>
+
+    <div id="cloudOtTableStep" style="display:none">
+      <div class="cloud-step">OT TABLE SETUP</div>
+      <h2>建立加班 Cloud Table</h2>
+      <p class="cloud-help">Desk Lah! 需要 <code>ot_records</code> 來同步加班紀錄。建立一次後，新增、修改、刪除以及 App 打開 / 回到前景都會自動同步。</p>
+      <textarea id="cloudOtSqlText" class="cloud-sql" readonly></textarea>
+      <div class="cloud-actions"><button class="textbtn" type="button" onclick="copyDeskOtSql()">複製 OT SQL</button><button class="primary" type="button" onclick="recheckDeskOtTable()">我已 Run · 再檢查</button></div>
+    </div>
+
+    <div id="cloudLeaveTableStep" style="display:none">
+      <div class="cloud-step">LEAVE TABLE SETUP</div>
+      <h2>建立假期 Cloud Tables</h2>
+      <p class="cloud-help">Desk Lah! 需要 <code>leave_transactions</code> 與 <code>leave_allowances</code>。這一階段只驗證「本機假期 → Cloud first write」，自動跨裝置同步會留到下一刀。</p>
+      <textarea id="cloudLeaveSqlText" class="cloud-sql" readonly></textarea>
+      <div class="cloud-actions"><button class="textbtn" type="button" onclick="copyDeskLeaveSql()">複製 Leave SQL</button><button class="primary" type="button" onclick="recheckDeskLeaveTables()">我已 Run · 再檢查</button></div>
+    </div>
+
+    <div id="cloudReadyStep" style="display:none">
+      <p class="cloud-help cloud-success">✓ Cloud 已連接</p>
+      <div id="cloudUserText" class="cloud-user"></div>
+      <p class="cloud-mini">稿件與原圖會自動同步。平常不需要手動處理同步。</p>
+      <div class="cloud-actions"><button class="textbtn quiet" type="button" onclick="switchDeskCloudProject()">切換 Cloud</button><button class="primary" type="button" onclick="closeCloudGate()">進入 Desk Lah!</button></div>
+    </div>
+    <div id="cloudMessage" class="cloud-error"></div>
+  </div>
+</div>
+<input id="otTemplatePicker" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+<div id="toast" class="toast"></div>
+<div id="modal" class="modal" onclick="closePhoto(event)"><div class="modalbox photo-modalbox"><button class="modalclose" onclick="closePhoto(event,true)">×</button><img id="modalPhoto" alt="原圖預覽"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script>
+const pages=[...document.querySelectorAll('.page')], nav=[...document.querySelectorAll('nav button')];
+const DRAFT_STORAGE_KEY='deskLahDraftsV1';
+const PHOTO_DB_NAME='deskLahLocalPhotosV1';
+const PHOTO_DB_VERSION=1;
+const PHOTO_STORE='photos';
+const CLOUD_URL_KEY='deskLahSupabaseUrlV1';
+const CLOUD_ANON_KEY='deskLahSupabaseAnonKeyV1';
+const DRAFT_TOMBSTONE_KEY='deskLahDraftTombstonesV1';
+const PHOTO_TOMBSTONE_KEY='deskLahPhotoTombstonesV1';
+const STORAGE_SETUP_ACK_KEY='deskLahStorageSetupAckPhase33AFixedV1';
+const DESK_DRAFTS_SQL=`create table if not exists public.desk_drafts (
+  id text primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  title text not null,
+  body text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  is_deleted boolean not null default false,
+  constraint desk_drafts_title_not_blank check (char_length(btrim(title)) > 0)
+);
+
+create index if not exists desk_drafts_user_updated_idx
+  on public.desk_drafts (user_id, updated_at desc);
+
+alter table public.desk_drafts enable row level security;
+
+revoke all on table public.desk_drafts from anon;
+grant select, insert, update, delete on table public.desk_drafts to authenticated;
+
+drop policy if exists desk_drafts_select_own on public.desk_drafts;
+create policy desk_drafts_select_own
+  on public.desk_drafts for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists desk_drafts_insert_own on public.desk_drafts;
+create policy desk_drafts_insert_own
+  on public.desk_drafts for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists desk_drafts_update_own on public.desk_drafts;
+create policy desk_drafts_update_own
+  on public.desk_drafts for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists desk_drafts_delete_own on public.desk_drafts;
+create policy desk_drafts_delete_own
+  on public.desk_drafts for delete
+  to authenticated
+  using (auth.uid() = user_id);`;
+const DESK_ORIGINALS_BUCKET='desk-originals';
+const DESK_STORAGE_SQL=`insert into storage.buckets (id, name, public)
+values ('desk-originals', 'desk-originals', false)
+on conflict (id) do update set public = excluded.public;
+
+drop policy if exists desk_originals_select_own on storage.objects;
+create policy desk_originals_select_own
+  on storage.objects for select
+  to authenticated
+  using (
+    bucket_id = 'desk-originals'
+    and (storage.foldername(name))[1] = (select auth.uid()::text)
+  );
+
+drop policy if exists desk_originals_insert_own on storage.objects;
+create policy desk_originals_insert_own
+  on storage.objects for insert
+  to authenticated
+  with check (
+    bucket_id = 'desk-originals'
+    and (storage.foldername(name))[1] = (select auth.uid()::text)
+  );`;
+const DESK_PHOTOS_SQL=`create table if not exists public.draft_photos (
+  id text primary key,
+  draft_id text not null,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  storage_key text not null,
+  original_name text not null,
+  mime_type text not null default 'application/octet-stream',
+  size_bytes bigint not null default 0 check (size_bytes >= 0),
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  is_deleted boolean not null default false,
+  unique (user_id, storage_key)
+);
+
+create index if not exists draft_photos_user_draft_sort_idx
+  on public.draft_photos (user_id, draft_id, sort_order);
+
+create index if not exists draft_photos_user_updated_idx
+  on public.draft_photos (user_id, updated_at desc);
+
+alter table public.draft_photos enable row level security;
+
+revoke all on table public.draft_photos from anon;
+grant select, insert, update, delete on table public.draft_photos to authenticated;
+
+drop policy if exists draft_photos_select_own on public.draft_photos;
+create policy draft_photos_select_own
+  on public.draft_photos for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists draft_photos_insert_own on public.draft_photos;
+create policy draft_photos_insert_own
+  on public.draft_photos for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists draft_photos_update_own on public.draft_photos;
+create policy draft_photos_update_own
+  on public.draft_photos for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists draft_photos_delete_own on public.draft_photos;
+create policy draft_photos_delete_own
+  on public.draft_photos for delete
+  to authenticated
+  using (auth.uid() = user_id);`;
+const DESK_OT_SQL=`create table if not exists public.ot_records (
+  id text primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  work_date date not null,
+  start_time time not null,
+  end_time time not null,
+  programme text not null default '',
+  location text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  is_deleted boolean not null default false
+);
+
+create index if not exists ot_records_user_work_date_idx
+  on public.ot_records (user_id, work_date desc);
+
+create index if not exists ot_records_user_updated_idx
+  on public.ot_records (user_id, updated_at desc);
+
+alter table public.ot_records enable row level security;
+
+revoke all on table public.ot_records from anon;
+grant select, insert, update, delete on table public.ot_records to authenticated;
+
+drop policy if exists ot_records_select_own on public.ot_records;
+create policy ot_records_select_own
+  on public.ot_records for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists ot_records_insert_own on public.ot_records;
+create policy ot_records_insert_own
+  on public.ot_records for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists ot_records_update_own on public.ot_records;
+create policy ot_records_update_own
+  on public.ot_records for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists ot_records_delete_own on public.ot_records;
+create policy ot_records_delete_own
+  on public.ot_records for delete
+  to authenticated
+  using (auth.uid() = user_id);`;
+const DESK_LEAVE_SQL=`create table if not exists public.leave_allowances (
+  id text primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  year integer not null check (year >= 2000 and year <= 2200),
+  annual_leave_days integer not null default 22 check (annual_leave_days >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (user_id, year)
+);
+
+create index if not exists leave_allowances_user_year_idx
+  on public.leave_allowances (user_id, year desc);
+
+alter table public.leave_allowances enable row level security;
+
+revoke all on table public.leave_allowances from anon;
+grant select, insert, update, delete on table public.leave_allowances to authenticated;
+
+drop policy if exists leave_allowances_select_own on public.leave_allowances;
+create policy leave_allowances_select_own
+  on public.leave_allowances for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists leave_allowances_insert_own on public.leave_allowances;
+create policy leave_allowances_insert_own
+  on public.leave_allowances for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists leave_allowances_update_own on public.leave_allowances;
+create policy leave_allowances_update_own
+  on public.leave_allowances for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists leave_allowances_delete_own on public.leave_allowances;
+create policy leave_allowances_delete_own
+  on public.leave_allowances for delete
+  to authenticated
+  using (auth.uid() = user_id);
+
+create table if not exists public.leave_transactions (
+  id text primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  leave_date date not null,
+  type text not null check (type in ('annual_use','replacement_use','replacement_earn')),
+  days integer not null check (days > 0),
+  note text not null default '',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  is_deleted boolean not null default false
+);
+
+create index if not exists leave_transactions_user_date_idx
+  on public.leave_transactions (user_id, leave_date desc);
+
+create index if not exists leave_transactions_user_updated_idx
+  on public.leave_transactions (user_id, updated_at desc);
+
+alter table public.leave_transactions enable row level security;
+
+revoke all on table public.leave_transactions from anon;
+grant select, insert, update, delete on table public.leave_transactions to authenticated;
+
+drop policy if exists leave_transactions_select_own on public.leave_transactions;
+create policy leave_transactions_select_own
+  on public.leave_transactions for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+drop policy if exists leave_transactions_insert_own on public.leave_transactions;
+create policy leave_transactions_insert_own
+  on public.leave_transactions for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists leave_transactions_update_own on public.leave_transactions;
+create policy leave_transactions_update_own
+  on public.leave_transactions for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists leave_transactions_delete_own on public.leave_transactions;
+create policy leave_transactions_delete_own
+  on public.leave_transactions for delete
+  to authenticated
+  using (auth.uid() = user_id);`;
+let deskSupabase=null;
+
+function cloudEls(){
+  return {
+    gate:document.getElementById('cloudGate'),
+    config:document.getElementById('cloudConfigStep'),
+    login:document.getElementById('cloudLoginStep'),
+    table:document.getElementById('cloudTableStep'),
+    storage:document.getElementById('cloudStorageStep'),
+    photoTable:document.getElementById('cloudPhotoTableStep'),
+    otTable:document.getElementById('cloudOtTableStep'),
+    leaveTable:document.getElementById('cloudLeaveTableStep'),
+    ready:document.getElementById('cloudReadyStep'),
+    message:document.getElementById('cloudMessage'),
+    userText:document.getElementById('cloudUserText')
+  };
+}
+function setCloudMessage(text='',ok=false){
+  const el=cloudEls().message;
+  el.textContent=text;
+  el.classList.toggle('cloud-success',!!ok);
+}
+function getCloudConfig(){
+  return {
+    url:(localStorage.getItem(CLOUD_URL_KEY)||'').trim(),
+    anon:(localStorage.getItem(CLOUD_ANON_KEY)||'').trim()
+  };
+}
+function showCloudGate(){cloudEls().gate.classList.add('show')}
+function closeCloudGate(){cloudEls().gate.classList.remove('show')}
+async function openDeskCloudPanel(){
+  seedCloudConfigFields();
+  const cfg=getCloudConfig();
+  if(!cfg.url||!cfg.anon){
+    showCloudStep('config');
+    setCloudMessage('請設定 Desk Lah! 專用 Supabase 連線。');
+    showCloudGate();
+    return;
+  }
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data,error}=await deskSupabase.auth.getSession();
+    if(error) throw error;
+    const user=data&&data.session&&data.session.user;
+    if(user){
+      cloudEls().userText.textContent=user.email||user.id||'Signed in';
+      showCloudStep('ready');
+      setCloudMessage('Cloud 已連接。',true);
+    }else{
+      showCloudStep('login');
+      setCloudMessage('請登入 Desk Lah! Cloud。');
+    }
+  }catch(error){
+    showCloudStep('config');
+    setCloudMessage('目前 Cloud 連線無法使用，請重新設定。');
+  }
+  showCloudGate();
+}
+async function switchDeskCloudProject(){
+  const ok=window.confirm('只會切換 Cloud 連線設定；本機稿件與資料不會被刪除。繼續？');
+  if(!ok) return;
+  if(deskSupabase){try{await deskSupabase.auth.signOut()}catch(error){console.warn(error)}}
+  resetCloudConfig();
+  seedCloudConfigFields();
+  setCloudMessage('請輸入新的 Desk Lah! Supabase Project URL 與 Publishable key。');
+  showCloudGate();
+}
+function showCloudStep(step){
+  const els=cloudEls();
+  els.config.style.display=step==='config'?'block':'none';
+  els.login.style.display=step==='login'?'block':'none';
+  els.table.style.display=step==='table'?'block':'none';
+  els.storage.style.display=step==='storage'?'block':'none';
+  els.photoTable.style.display=step==='photoTable'?'block':'none';
+  els.otTable.style.display=step==='otTable'?'block':'none';
+  els.leaveTable.style.display=step==='leaveTable'?'block':'none';
+  els.ready.style.display=step==='ready'?'block':'none';
+}
+function createDeskSupabase(){
+  const cfg=getCloudConfig();
+  if(!cfg.url||!cfg.anon) return null;
+  if(!window.supabase || typeof window.supabase.createClient!=='function') throw new Error('Supabase library failed to load');
+  deskSupabase=window.supabase.createClient(cfg.url,cfg.anon,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  return deskSupabase;
+}
+async function checkDeskDraftTable({openGateOnFail=true}={}){
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {error}=await deskSupabase.from('desk_drafts').select('id').limit(1);
+    if(error){
+      console.warn('Desk Lah! desk_drafts table check failed.',error);
+      setSync('同步失敗 · 重試',false);
+      showCloudStep('table');
+      document.getElementById('cloudSqlText').value=DESK_DRAFTS_SQL;
+      setCloudMessage(`desk_drafts 尚未可用：${error.message||'請先建立 table / RLS。'}`);
+      if(openGateOnFail) showCloudGate();
+      return false;
+    }
+    setSync('同步中…',true);
+    setCloudMessage('Cloud 資料已連接。',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! desk_drafts table check failed.',error);
+    setSync('同步失敗 · 重試',false);
+    setCloudMessage(error&&error.message?error.message:'Cloud table check failed.');
+    if(openGateOnFail) showCloudGate();
+    return false;
+  }
+}
+async function recheckDeskDraftTable(){
+  setCloudMessage('正在檢查 desk_drafts…');
+  const ok=await checkDeskDraftTable({openGateOnFail:false});
+  if(ok){await checkDeskStorageBucket({openGateOnFail:true});}
+}
+async function checkDeskStorageBucket({openGateOnFail=true}={}){
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user) return false;
+    const {error}=await deskSupabase.storage.from(DESK_ORIGINALS_BUCKET).list(user.id,{limit:1});
+    if(error){
+      console.warn('Desk Lah! Storage bucket check failed.',error);
+      setSync('同步失敗 · 重試',false);
+      showCloudStep('storage');
+      document.getElementById('cloudStorageSqlText').value=DESK_STORAGE_SQL;
+      setCloudMessage(`desk-originals 尚未可用：${error.message||'請先建立 private bucket / RLS。'}`);
+      if(openGateOnFail) showCloudGate();
+      return false;
+    }
+    setCloudMessage('原圖儲存已連接。',true);
+    return await checkDeskPhotoTable({openGateOnFail});
+  }catch(error){
+    console.error('Desk Lah! Storage bucket check failed.',error);
+    setSync('同步失敗 · 重試',false);
+    showCloudStep('storage');
+    document.getElementById('cloudStorageSqlText').value=DESK_STORAGE_SQL;
+    setCloudMessage(error&&error.message?error.message:'Storage bucket check failed.');
+    if(openGateOnFail) showCloudGate();
+    return false;
+  }
+}
+async function recheckDeskStorage(){
+  setCloudMessage('正在檢查 desk-originals…');
+  const ok=await checkDeskStorageBucket({openGateOnFail:false});
+  if(ok){
+    localStorage.setItem(STORAGE_SETUP_ACK_KEY,'1');
+  }
+}
+async function checkDeskPhotoTable({openGateOnFail=true}={}){
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {error}=await deskSupabase.from('draft_photos').select('id').limit(1);
+    if(error){
+      console.warn('Desk Lah! draft_photos table check failed.',error);
+      setSync('同步失敗 · 重試',false);
+      showCloudStep('photoTable');
+      const box=document.getElementById('cloudPhotoSqlText');
+      if(box) box.value=DESK_PHOTOS_SQL;
+      setCloudMessage(`draft_photos 尚未可用：${error.message||'請先建立 metadata table / RLS。'}`);
+      if(openGateOnFail) showCloudGate();
+      return false;
+    }
+    setSync('✓ 已同步',true);
+    showCloudStep('ready');
+    setSync('✓ 已同步',true);
+    setCloudMessage('Cloud 已就緒。',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! draft_photos table check failed.',error);
+    setSync('同步失敗 · 重試',false);
+    showCloudStep('photoTable');
+    const box=document.getElementById('cloudPhotoSqlText');
+    if(box) box.value=DESK_PHOTOS_SQL;
+    setCloudMessage(error&&error.message?error.message:'Photo metadata table check failed.');
+    if(openGateOnFail) showCloudGate();
+    return false;
+  }
+}
+async function recheckDeskPhotoTable(){
+  setCloudMessage('正在檢查 draft_photos…');
+  await checkDeskPhotoTable({openGateOnFail:false});
+}
+async function checkDeskOtTable({openGateOnFail=true}={}){
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {error}=await deskSupabase.from('ot_records').select('id').limit(1);
+    if(error){
+      console.warn('Desk Lah! ot_records table check failed.',error);
+      showCloudStep('otTable');
+      const box=document.getElementById('cloudOtSqlText');
+      if(box) box.value=DESK_OT_SQL;
+      setCloudMessage(`ot_records 尚未可用：${error.message||'請先建立 table / RLS。'}`);
+      if(openGateOnFail) showCloudGate();
+      return false;
+    }
+    showCloudStep('ready');
+    setCloudMessage('OT Cloud table 已就緒。',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! ot_records table check failed.',error);
+    showCloudStep('otTable');
+    const box=document.getElementById('cloudOtSqlText');
+    if(box) box.value=DESK_OT_SQL;
+    setCloudMessage(error&&error.message?error.message:'OT Cloud table check failed.');
+    if(openGateOnFail) showCloudGate();
+    return false;
+  }
+}
+async function recheckDeskOtTable(){
+  setCloudMessage('正在檢查 ot_records…');
+  const ok=await checkDeskOtTable({openGateOnFail:false});
+  if(ok){
+    setCloudMessage('✓ ot_records 已建立，可以開始 Cloud Write 測試。',true);
+    showCloudStep('ready');
+  }
+}
+async function copyDeskOtSql(){
+  const text=DESK_OT_SQL;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);demoSave('OT SQL 已複製');return;}
+  }catch(_){}
+  const box=document.getElementById('cloudOtSqlText');
+  box.focus();box.select();
+  let ok=false;try{ok=document.execCommand('copy');}catch(_){}
+  demoSave(ok?'OT SQL 已複製':'請手動 Ctrl + C');
+}
+
+async function checkDeskLeaveTables({openGateOnFail=true}={}){
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const [transactionsResult, allowancesResult]=await Promise.all([
+      deskSupabase.from('leave_transactions').select('id').limit(1),
+      deskSupabase.from('leave_allowances').select('id').limit(1)
+    ]);
+    const error=transactionsResult.error||allowancesResult.error;
+    if(error){
+      console.warn('Desk Lah! leave cloud table check failed.',error);
+      showCloudStep('leaveTable');
+      const box=document.getElementById('cloudLeaveSqlText');
+      if(box) box.value=DESK_LEAVE_SQL;
+      setCloudMessage(`Leave Cloud tables 尚未可用：${error.message||'請先建立 tables / RLS。'}`);
+      if(openGateOnFail) showCloudGate();
+      return false;
+    }
+    showCloudStep('ready');
+    setCloudMessage('Leave Cloud tables 已就緒。',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! leave cloud table check failed.',error);
+    showCloudStep('leaveTable');
+    const box=document.getElementById('cloudLeaveSqlText');
+    if(box) box.value=DESK_LEAVE_SQL;
+    setCloudMessage(error&&error.message?error.message:'Leave Cloud table check failed.');
+    if(openGateOnFail) showCloudGate();
+    return false;
+  }
+}
+async function recheckDeskLeaveTables(){
+  setCloudMessage('正在檢查 leave_transactions / leave_allowances…');
+  const ok=await checkDeskLeaveTables({openGateOnFail:false});
+  if(ok){
+    setCloudMessage('✓ Leave Cloud tables 已建立，可以開始 Cloud Write 測試。',true);
+    showCloudStep('ready');
+  }
+}
+async function copyDeskLeaveSql(){
+  const sqlText=DESK_LEAVE_SQL;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(sqlText);
+      demoSave('Leave SQL 已複製');
+      return;
+    }
+  }catch(_){}
+  const box=document.getElementById('cloudLeaveSqlText');
+  box.focus();box.select();
+  let ok=false;try{ok=document.execCommand('copy');}catch(_){}
+  demoSave(ok?'Leave SQL 已複製':'請手動 Ctrl + C');
+}
+
+async function copyDeskPhotoSql(){
+  const text=DESK_PHOTOS_SQL;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);demoSave('Metadata SQL 已複製');return;}
+  }catch(_){}
+  const box=document.getElementById('cloudPhotoSqlText');
+  box.focus();box.select();
+  let ok=false;try{ok=document.execCommand('copy');}catch(_){}
+  demoSave(ok?'Metadata SQL 已複製':'請手動 Ctrl + C');
+}
+
+async function copyDeskStorageSql(){
+  const text=DESK_STORAGE_SQL;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);demoSave('Storage SQL 已複製');return;}
+  }catch(_){}
+  const box=document.getElementById('cloudStorageSqlText');
+  box.focus();box.select();
+  let ok=false;try{ok=document.execCommand('copy');}catch(_){}
+  demoSave(ok?'Storage SQL 已複製':'請手動 Ctrl + C');
+}
+
+async function copyDeskDraftSql(){
+  const text=DESK_DRAFTS_SQL;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);demoSave('SQL 已複製');return;}
+  }catch(_){}
+  const box=document.getElementById('cloudSqlText');
+  box.focus();box.select();
+  let ok=false;try{ok=document.execCommand('copy');}catch(_){}
+  demoSave(ok?'SQL 已複製':'請手動 Ctrl + C');
+}
+async function checkDeskCloudSession(){
+  setCloudMessage('');
+  const cfg=getCloudConfig();
+  if(!cfg.url||!cfg.anon){
+    setSync('需要設定',false);
+    showCloudStep('config');
+    showCloudGate();
+    return false;
+  }
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data,error}=await deskSupabase.auth.getSession();
+    if(error) throw error;
+    const user=data && data.session && data.session.user;
+    if(user){
+      cloudEls().userText.textContent=user.email||user.id||'Signed in';
+      const tableReady=await checkDeskDraftTable();
+      if(!tableReady) return false;
+            if(localStorage.getItem(STORAGE_SETUP_ACK_KEY)!=='1'){
+        setSync('同步失敗 · 重試',false);
+        showCloudStep('storage');
+        const box=document.getElementById('cloudStorageSqlText');
+        if(box) box.value=DESK_STORAGE_SQL;
+        setCloudMessage('Cloud 原圖儲存尚未完成，請檢查 Supabase 設定。');
+        showCloudGate();
+        return false;
+      }
+      return await checkDeskStorageBucket({openGateOnFail:true});
+    }
+    setSync('需要登入',false);
+    showCloudStep('login');
+    showCloudGate();
+    return false;
+  }catch(error){
+    console.error('Desk Lah! cloud session check failed.',error);
+    setSync('同步失敗 · 重試',false);
+    showCloudStep('config');
+    showCloudGate();
+    setCloudMessage('無法連接 Supabase。請檢查 Project URL 與 public anon key。');
+    return false;
+  }
+}
+function saveCloudConfig(){
+  const url=document.getElementById('cloudUrl').value.trim().replace(/\/$/,'');
+  const anon=document.getElementById('cloudAnonKey').value.trim();
+  if(!/^https:\/\/.+\.supabase\.co$/i.test(url)){setCloudMessage('請貼入正確的 Supabase Project URL。');return;}
+  if(!anon){setCloudMessage('請貼入 public anon key。');return;}
+  if(/service[_-]?role/i.test(anon)){setCloudMessage('不要使用 service_role key。這裡只接受 public / anon key。');return;}
+  localStorage.setItem(CLOUD_URL_KEY,url);
+  localStorage.setItem(CLOUD_ANON_KEY,anon);
+  deskSupabase=null;
+  setCloudMessage('連線設定已保存。現在登入你的帳號。',true);
+  showCloudStep('login');
+  setSync('需要登入',false);
+}
+function resetCloudConfig(){
+  localStorage.removeItem(CLOUD_URL_KEY);
+  localStorage.removeItem(CLOUD_ANON_KEY);
+  deskSupabase=null;
+  document.getElementById('cloudUrl').value='';
+  document.getElementById('cloudAnonKey').value='';
+  document.getElementById('cloudPassword').value='';
+  setCloudMessage('');
+  setSync('需要設定',false);
+  showCloudStep('config');
+}
+async function signInDeskCloud(){
+  const email=document.getElementById('cloudEmail').value.trim();
+  const password=document.getElementById('cloudPassword').value;
+  if(!email||!password){setCloudMessage('請輸入 Email 與 Password。');return;}
+  try{
+    setCloudMessage('正在登入…');
+    if(!deskSupabase) createDeskSupabase();
+    const {data,error}=await deskSupabase.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    const user=data && data.user;
+    cloudEls().userText.textContent=(user&&user.email)||'Signed in';
+    document.getElementById('cloudPassword').value='';
+    setCloudMessage('登入成功。正在連接 Cloud…',true);
+    const tableReady=await checkDeskDraftTable();
+    if(tableReady){
+      await pullDraftsFromCloud({quiet:true,reason:'sign-in'});
+      const otReady=await checkDeskOtTable({openGateOnFail:true});
+      if(otReady) await pullOTRecordsFromCloud({quiet:true,reason:'sign-in'});
+      const leaveReady=await checkDeskLeaveTables({openGateOnFail:true});
+      if(leaveReady) await pullLeaveRecordsFromCloud({quiet:true,reason:'sign-in'});
+      setSync('同步失敗 · 重試',false);
+      showCloudStep('storage');
+      const box=document.getElementById('cloudStorageSqlText');
+      if(box) box.value=DESK_STORAGE_SQL;
+      setCloudMessage('Cloud 原圖儲存尚未完成，請檢查 Supabase 設定。');
+      showCloudGate();
+    }
+  }catch(error){
+    console.error('Desk Lah! sign in failed.',error);
+    setCloudMessage(error && error.message ? `登入失敗：${error.message}` : '登入失敗。');
+    setSync('需要登入',false);
+  }
+}
+async function signOutDeskCloud(){
+  if(deskSupabase){try{await deskSupabase.auth.signOut()}catch(error){console.warn(error)}}
+  setSync('需要登入',false);
+  showCloudStep('login');
+  setCloudMessage('已登出。');
+  showCloudGate();
+}
+function seedCloudConfigFields(){
+  const cfg=getCloudConfig();
+  document.getElementById('cloudUrl').value=cfg.url;
+  document.getElementById('cloudAnonKey').value=cfg.anon;
+  const sqlBox=document.getElementById('cloudSqlText'); if(sqlBox) sqlBox.value=DESK_DRAFTS_SQL;
+  const storageSqlBox=document.getElementById('cloudStorageSqlText'); if(storageSqlBox) storageSqlBox.value=DESK_STORAGE_SQL;
+  const photoSqlBox=document.getElementById('cloudPhotoSqlText'); if(photoSqlBox) photoSqlBox.value=DESK_PHOTOS_SQL;
+  const otSqlBox=document.getElementById('cloudOtSqlText'); if(otSqlBox) otSqlBox.value=DESK_OT_SQL;
+}
+let currentDraftId=null;
+let selectedPhotoItems=[];
+let detailPhotoUrls=[];
+let conversionUndoText=null;
+const SIMP_TO_TRAD={"㑇":"㑳","㑩":"儸","㓥":"劏","㔉":"劚","㖊":"噚","㖞":"喎","㘎":"㘚","㟆":"㠏","㤘":"㥮","㧐":"㩳","㧑":"撝","㧟":"擓","㨫":"㩜","㭎":"棡","㱩":"殰","㱮":"殨","㲿":"瀇","㶉":"鸂","㶶":"燶","㶽":"煱","㺍":"獱","䁖":"瞜","䃅":"磾","䅉":"稏","䅟":"穇","䇲":"筴","䌶":"䊷","䌷":"紬","䌸":"縳","䌹":"絅","䌺":"䋙","䌼":"綐","䌽":"綵","䌾":"䋻","䍀":"繿","䍁":"繸","䏝":"膞","䓕":"薳","䓖":"藭","䓨":"罃","䗖":"螮","䙓":"襬","䜣":"訢","䜧":"譅","䜩":"讌","䝙":"貙","䞍":"䝼","䞐":"賰","䥽":"鏺","䦃":"鐯","䩄":"靦","䯄":"騧","䯅":"䯀","䲝":"䱽","䲟":"鮣","䲠":"鰆","䲢":"鰧","䴓":"鳾","䴔":"鵁","䴕":"鴷","䴖":"鶄","䴗":"鶪","䴘":"鷈","䴙":"鷿","䶮":"龑","万":"萬","与":"與","丑":"醜","专":"專","业":"業","丛":"叢","东":"東","丝":"絲","丢":"丟","两":"兩","严":"嚴","丧":"喪","个":"個","丰":"豐","临":"臨","为":"為","丽":"麗","举":"舉","么":"麼","义":"義","乌":"烏","乐":"樂","乔":"喬","习":"習","乡":"鄉","书":"書","买":"買","乱":"亂","争":"爭","于":"於","亏":"虧","云":"雲","亘":"亙","亚":"亞","产":"產","亩":"畝","亲":"親","亵":"褻","亸":"嚲","亿":"億","仅":"僅","仆":"僕","从":"從","仑":"侖","仓":"倉","仪":"儀","们":"們","价":"價","众":"眾","优":"優","会":"會","伛":"傴","伞":"傘","伟":"偉","传":"傳","伣":"俔","伤":"傷","伥":"倀","伦":"倫","伧":"傖","伪":"偽","伫":"佇","体":"體","佣":"傭","佥":"僉","侠":"俠","侣":"侶","侥":"僥","侦":"偵","侧":"側","侨":"僑","侩":"儈","侪":"儕","侬":"儂","俣":"俁","俦":"儔","俨":"儼","俩":"倆","俪":"儷","俫":"倈","俭":"儉","债":"債","倾":"傾","偬":"傯","偻":"僂","偾":"僨","偿":"償","傥":"儻","傧":"儐","储":"儲","傩":"儺","儿":"兒","兑":"兌","兖":"兗","党":"黨","兰":"蘭","关":"關","兴":"興","兹":"茲","养":"養","兽":"獸","冁":"囅","内":"內","冈":"岡","册":"冊","写":"寫","军":"軍","农":"農","冯":"馮","冲":"衝","决":"決","况":"況","冻":"凍","净":"淨","凄":"淒","凉":"涼","减":"減","凑":"湊","凛":"凜","几":"幾","凤":"鳳","凫":"鳧","凭":"憑","凯":"凱","击":"擊","凿":"鑿","刍":"芻","刘":"劉","则":"則","刚":"剛","创":"創","删":"刪","别":"別","刬":"剗","刭":"剄","刹":"剎","刽":"劊","刿":"劌","剀":"剴","剂":"劑","剐":"剮","剑":"劍","剥":"剝","剧":"劇","劝":"勸","办":"辦","务":"務","劢":"勱","动":"動","励":"勵","劲":"勁","劳":"勞","势":"勢","勋":"勳","勚":"勩","匀":"勻","匦":"匭","匮":"匱","区":"區","医":"醫","华":"華","协":"協","单":"單","卖":"賣","占":"佔","卢":"盧","卤":"鹵","卧":"臥","卫":"衛","却":"卻","厂":"廠","厅":"廳","历":"歷","厉":"厲","压":"壓","厌":"厭","厍":"厙","厐":"龎","厕":"廁","厘":"釐","厢":"廂","厣":"厴","厦":"廈","厨":"廚","厩":"廄","厮":"廝","县":"縣","叁":"叄","参":"參","叆":"靉","叇":"靆","双":"雙","发":"發","变":"變","叙":"敘","叠":"疊","叶":"葉","号":"號","叹":"嘆","叽":"嘰","后":"後","吓":"嚇","吕":"呂","吗":"嗎","吣":"唚","吨":"噸","听":"聽","启":"啓","吴":"吳","呐":"吶","呒":"嘸","呓":"囈","呕":"嘔","呖":"嚦","呗":"唄","员":"員","呙":"咼","呛":"嗆","呜":"嗚","咏":"詠","咙":"嚨","咛":"嚀","咝":"噝","咤":"吒","响":"響","哑":"啞","哒":"噠","哓":"嘵","哔":"嗶","哕":"噦","哗":"嘩","哙":"噲","哜":"嚌","哝":"噥","哟":"喲","唛":"嘜","唝":"嗊","唠":"嘮","唡":"啢","唢":"嗩","唤":"喚","啧":"嘖","啬":"嗇","啭":"囀","啮":"嚙","啰":"囉","啴":"嘽","啸":"嘯","喂":"餵","喷":"噴","喽":"嘍","喾":"嚳","嗫":"囁","嗳":"噯","嘘":"噓","嘤":"嚶","嘱":"囑","噜":"嚕","嚣":"囂","团":"團","园":"園","囱":"囪","围":"圍","囵":"圇","国":"國","图":"圖","圆":"圓","圣":"聖","圹":"壙","场":"場","坂":"阪","坏":"壞","块":"塊","坚":"堅","坛":"壇","坜":"壢","坝":"壩","坞":"塢","坟":"墳","坠":"墜","垄":"壟","垅":"壠","垆":"壚","垒":"壘","垦":"墾","垩":"堊","垫":"墊","垭":"埡","垯":"墶","垱":"壋","垲":"塏","垴":"堖","埘":"塒","埙":"塤","埚":"堝","埯":"垵","堑":"塹","堕":"墮","塆":"壪","墙":"牆","壮":"壯","声":"聲","壳":"殼","壶":"壺","壸":"壼","处":"處","备":"備","复":"復","够":"夠","头":"頭","夸":"誇","夹":"夾","夺":"奪","奁":"奩","奂":"奐","奋":"奮","奖":"獎","奥":"奧","妆":"妝","妇":"婦","妈":"媽","妩":"嫵","妪":"嫗","妫":"媯","姗":"姍","姹":"奼","娄":"婁","娅":"婭","娆":"嬈","娇":"嬌","娈":"孌","娱":"娛","娲":"媧","娴":"嫻","婳":"嫿","婴":"嬰","婵":"嬋","婶":"嬸","媪":"媼","媭":"嬃","嫒":"嬡","嫔":"嬪","嫱":"嬙","嬷":"嬤","孙":"孫","学":"學","孪":"孿","宁":"寧","宝":"寶","实":"實","宠":"寵","审":"審","宪":"憲","宫":"宮","宽":"寬","宾":"賓","寝":"寢","对":"對","寻":"尋","导":"導","寿":"壽","将":"將","尔":"爾","尘":"塵","尝":"嘗","尧":"堯","尴":"尷","尸":"屍","尽":"盡","层":"層","屃":"屓","屉":"屜","届":"屆","属":"屬","屡":"屢","屦":"屨","屿":"嶼","岁":"歲","岂":"豈","岖":"嶇","岗":"崗","岘":"峴","岙":"嶴","岚":"嵐","岛":"島","岭":"嶺","岽":"崬","岿":"巋","峃":"嶨","峄":"嶧","峡":"峽","峣":"嶢","峤":"嶠","峥":"崢","峦":"巒","崂":"嶗","崃":"崍","崄":"嶮","崭":"嶄","嵘":"嶸","嵚":"嶔","嵝":"嶁","巅":"巔","巩":"鞏","巯":"巰","币":"幣","帅":"帥","师":"師","帏":"幃","帐":"帳","帘":"簾","帜":"幟","带":"帶","帧":"幀","帮":"幫","帱":"幬","帻":"幘","帼":"幗","幂":"冪","干":"乾","并":"並","广":"廣","庄":"莊","庆":"慶","庐":"廬","庑":"廡","库":"庫","应":"應","庙":"廟","庞":"龐","废":"廢","庼":"廎","廪":"廩","开":"開","异":"異","弃":"棄","弑":"弒","张":"張","弥":"彌","弪":"弳","弯":"彎","弹":"彈","强":"強","归":"歸","当":"當","录":"錄","彟":"彠","彦":"彥","彷":"徬","彻":"徹","征":"徵","径":"徑","徕":"徠","忆":"憶","忏":"懺","忧":"憂","忾":"愾","怀":"懷","态":"態","怂":"慫","怃":"憮","怄":"慪","怅":"悵","怆":"愴","怜":"憐","总":"總","怼":"懟","怿":"懌","恋":"戀","恒":"恆","恳":"懇","恶":"惡","恸":"慟","恹":"懨","恺":"愷","恻":"惻","恼":"惱","恽":"惲","悦":"悅","悫":"愨","悬":"懸","悭":"慳","悮":"悞","悯":"憫","惊":"驚","惧":"懼","惨":"慘","惩":"懲","惫":"憊","惬":"愜","惭":"慚","惮":"憚","惯":"慣","愠":"慍","愤":"憤","愦":"憒","愿":"願","慑":"懾","慭":"憖","懑":"懣","懒":"懶","懔":"懍","戆":"戇","戋":"戔","戏":"戲","戗":"戧","战":"戰","戬":"戩","戯":"戱","户":"戶","扑":"撲","执":"執","扩":"擴","扪":"捫","扫":"掃","扬":"揚","扰":"擾","抚":"撫","抛":"拋","抟":"摶","抠":"摳","抡":"掄","抢":"搶","护":"護","报":"報","担":"擔","拟":"擬","拢":"攏","拣":"揀","拥":"擁","拦":"攔","拧":"擰","拨":"撥","择":"擇","挂":"掛","挚":"摯","挛":"攣","挜":"掗","挝":"撾","挞":"撻","挟":"挾","挠":"撓","挡":"擋","挢":"撟","挣":"掙","挤":"擠","挥":"揮","挦":"撏","挽":"輓","捝":"挩","捞":"撈","损":"損","捡":"撿","换":"換","捣":"搗","据":"據","掳":"擄","掴":"摑","掷":"擲","掸":"撣","掺":"摻","掼":"摜","揽":"攬","揾":"搵","揿":"撳","搀":"攙","搁":"擱","搂":"摟","搅":"攪","携":"攜","摄":"攝","摅":"攄","摆":"擺","摇":"搖","摈":"擯","摊":"攤","撄":"攖","撑":"撐","撵":"攆","撷":"擷","撸":"擼","撺":"攛","擞":"擻","攒":"攢","敌":"敵","敛":"斂","敩":"斆","数":"數","斋":"齋","斓":"斕","斗":"鬥","斩":"斬","断":"斷","无":"無","旧":"舊","时":"時","旷":"曠","旸":"暘","昙":"曇","昵":"暱","昼":"晝","昽":"曨","显":"顯","晋":"晉","晒":"曬","晓":"曉","晔":"曄","晕":"暈","晖":"暉","暂":"暫","暧":"曖","术":"術","朴":"樸","机":"機","杀":"殺","杂":"雜","权":"權","杆":"桿","杠":"槓","条":"條","来":"來","杨":"楊","杩":"榪","杰":"傑","极":"極","构":"構","枞":"樅","枢":"樞","枣":"棗","枥":"櫪","枧":"梘","枨":"棖","枪":"槍","枫":"楓","枭":"梟","柜":"櫃","柠":"檸","柽":"檉","栀":"梔","栅":"柵","标":"標","栈":"棧","栉":"櫛","栊":"櫳","栋":"棟","栌":"櫨","栎":"櫟","栏":"欄","树":"樹","栖":"棲","样":"樣","栾":"欒","桠":"椏","桡":"橈","桢":"楨","档":"檔","桤":"榿","桥":"橋","桦":"樺","桧":"檜","桨":"槳","桩":"樁","梦":"夢","梼":"檮","梾":"棶","梿":"槤","检":"檢","棁":"梲","棂":"櫺","棱":"稜","椁":"槨","椟":"櫝","椠":"槧","椤":"欏","椭":"橢","楼":"樓","榄":"欖","榅":"榲","榇":"櫬","榈":"櫚","榉":"櫸","槚":"檟","槛":"檻","槟":"檳","槠":"櫧","横":"橫","樯":"檣","樱":"櫻","橥":"櫫","橱":"櫥","橹":"櫓","橼":"櫞","檩":"檁","欢":"歡","欤":"歟","欧":"歐","歼":"殲","殁":"歿","殇":"殤","残":"殘","殒":"殞","殓":"殮","殚":"殫","殡":"殯","殴":"毆","毁":"毀","毂":"轂","毕":"畢","毙":"斃","毡":"氈","毵":"毿","氇":"氌","气":"氣","氢":"氫","氩":"氬","氲":"氳","汇":"匯","汉":"漢","汤":"湯","汹":"洶","沉":"沈","沟":"溝","没":"沒","沣":"灃","沤":"漚","沥":"瀝","沦":"淪","沧":"滄","沨":"渢","沩":"溈","沪":"滬","泄":"洩","泞":"濘","泪":"淚","泶":"澩","泷":"瀧","泸":"瀘","泺":"濼","泻":"瀉","泼":"潑","泽":"澤","泾":"涇","洁":"潔","洒":"灑","洼":"窪","浃":"浹","浅":"淺","浆":"漿","浇":"澆","浈":"湞","浉":"溮","浊":"濁","测":"測","浍":"澮","济":"濟","浏":"瀏","浐":"滻","浑":"渾","浒":"滸","浓":"濃","浔":"潯","浕":"濜","涂":"塗","涌":"湧","涛":"濤","涝":"澇","涞":"淶","涟":"漣","涠":"潿","涡":"渦","涢":"溳","涣":"渙","涤":"滌","润":"潤","涧":"澗","涨":"漲","涩":"澀","淀":"澱","渊":"淵","渌":"淥","渍":"漬","渎":"瀆","渐":"漸","渑":"澠","渔":"漁","渖":"瀋","渗":"滲","温":"溫","湾":"灣","湿":"濕","溁":"濚","溃":"潰","溅":"濺","溆":"漵","溇":"漊","滗":"潷","滚":"滾","滞":"滯","滟":"灧","滠":"灄","满":"滿","滢":"瀅","滤":"濾","滥":"濫","滦":"灤","滨":"濱","滩":"灘","滪":"澦","漓":"灕","漤":"灠","潆":"瀠","潇":"瀟","潋":"瀲","潍":"濰","潜":"潛","潴":"瀦","澛":"瀂","澜":"瀾","濑":"瀨","濒":"瀕","灏":"灝","灭":"滅","灯":"燈","灵":"靈","灾":"災","灿":"燦","炀":"煬","炉":"爐","炖":"燉","炜":"煒","炝":"熗","点":"點","炼":"煉","炽":"熾","烁":"爍","烂":"爛","烃":"烴","烛":"燭","烟":"煙","烦":"煩","烧":"燒","烨":"燁","烩":"燴","烫":"燙","烬":"燼","热":"熱","焕":"煥","焖":"燜","焘":"燾","煴":"熅","爱":"愛","爷":"爺","牍":"牘","牦":"氂","牵":"牽","牺":"犧","犊":"犢","状":"狀","犷":"獷","犸":"獁","犹":"猶","狈":"狽","狝":"獮","狞":"獰","独":"獨","狭":"狹","狮":"獅","狯":"獪","狰":"猙","狱":"獄","狲":"猻","猃":"獫","猎":"獵","猕":"獼","猡":"玀","猪":"豬","猫":"貓","猬":"蝟","献":"獻","獭":"獺","玑":"璣","玙":"璵","玚":"瑒","玛":"瑪","玮":"瑋","环":"環","现":"現","玱":"瑲","玺":"璽","珐":"琺","珑":"瓏","珰":"璫","珲":"琿","琎":"璡","琏":"璉","琐":"瑣","琼":"瓊","瑶":"瑤","瑷":"璦","璎":"瓔","瓒":"瓚","瓮":"甕","瓯":"甌","电":"電","画":"畫","畅":"暢","畴":"疇","疖":"癤","疗":"療","疟":"瘧","疠":"癘","疡":"瘍","疬":"癧","疭":"瘲","疮":"瘡","疯":"瘋","疱":"皰","疴":"痾","痈":"癰","痉":"痙","痒":"癢","痖":"瘂","痨":"癆","痪":"瘓","痫":"癇","瘅":"癉","瘆":"瘮","瘗":"瘞","瘘":"瘻","瘪":"癟","瘫":"癱","瘾":"癮","瘿":"癭","癞":"癩","癣":"癬","癫":"癲","皑":"皚","皱":"皺","皲":"皸","盏":"盞","盐":"鹽","监":"監","盖":"蓋","盗":"盜","盘":"盤","眍":"瞘","眦":"眥","眬":"矓","着":"著","睁":"睜","睐":"睞","睑":"瞼","睾":"睪","瞆":"瞶","瞒":"瞞","瞩":"矚","矫":"矯","矶":"磯","矾":"礬","矿":"礦","砀":"碭","码":"碼","砖":"磚","砗":"硨","砚":"硯","砜":"碸","砺":"礪","砻":"礱","砾":"礫","础":"礎","硁":"硜","硕":"碩","硖":"硤","硗":"磽","硙":"磑","硚":"礄","确":"確","硷":"礆","碍":"礙","碛":"磧","碜":"磣","碱":"鹼","礴":"礡","礼":"禮","祃":"禡","祎":"禕","祢":"禰","祯":"禎","祷":"禱","祸":"禍","禀":"稟","禄":"祿","禅":"禪","离":"離","秃":"禿","秆":"稈","种":"種","积":"積","称":"稱","秽":"穢","秾":"穠","稆":"穭","税":"稅","稣":"穌","稳":"穩","穑":"穡","穷":"窮","窃":"竊","窍":"竅","窎":"窵","窑":"窯","窜":"竄","窝":"窩","窥":"窺","窦":"竇","窭":"窶","竖":"竪","竞":"競","笃":"篤","笋":"筍","笔":"筆","笕":"筧","笺":"箋","笼":"籠","笾":"籩","筑":"築","筚":"篳","筛":"篩","筜":"簹","筝":"箏","筹":"籌","筼":"篔","签":"簽","简":"簡","箓":"籙","箦":"簀","箧":"篋","箨":"籜","箩":"籮","箪":"簞","箫":"簫","篑":"簣","篓":"簍","篮":"籃","篯":"籛","篱":"籬","簖":"籪","籁":"籟","籴":"糴","类":"類","籼":"秈","粜":"糶","粝":"糲","粤":"粵","粪":"糞","粮":"糧","糁":"糝","糇":"餱","紧":"緊","絷":"縶","纟":"糹","纠":"糾","纡":"紆","红":"紅","纣":"紂","纤":"纖","纥":"紇","约":"約","级":"級","纨":"紈","纩":"纊","纪":"紀","纫":"紉","纬":"緯","纭":"紜","纮":"紘","纯":"純","纰":"紕","纱":"紗","纲":"綱","纳":"納","纴":"紝","纵":"縱","纶":"綸","纷":"紛","纸":"紙","纹":"紋","纺":"紡","纻":"紵","纼":"紖","纽":"紐","纾":"紓","线":"線","绀":"紺","绁":"紲","绂":"紱","练":"練","组":"組","绅":"紳","细":"細","织":"織","终":"終","绉":"縐","绊":"絆","绋":"紼","绌":"絀","绍":"紹","绎":"繹","经":"經","绐":"紿","绑":"綁","绒":"絨","结":"結","绔":"絝","绕":"繞","绖":"絰","绗":"絎","绘":"繪","给":"給","绚":"絢","绛":"絳","络":"絡","绝":"絕","绞":"絞","统":"統","绠":"綆","绡":"綃","绢":"絹","绣":"繡","绤":"綌","绥":"綏","绦":"縧","继":"繼","绨":"綈","绩":"績","绪":"緒","绫":"綾","绬":"緓","续":"續","绮":"綺","绯":"緋","绰":"綽","绱":"緔","绲":"緄","绳":"繩","维":"維","绵":"綿","绶":"綬","绷":"繃","绸":"綢","绹":"綯","绺":"綹","绻":"綣","综":"綜","绽":"綻","绾":"綰","绿":"綠","缀":"綴","缁":"緇","缂":"緙","缃":"緗","缄":"緘","缅":"緬","缆":"纜","缇":"緹","缈":"緲","缉":"緝","缊":"縕","缋":"繢","缌":"緦","缍":"綞","缎":"緞","缏":"緶","缐":"線","缑":"緱","缒":"縋","缓":"緩","缔":"締","缕":"縷","编":"編","缗":"緡","缘":"緣","缙":"縉","缚":"縛","缛":"縟","缜":"縝","缝":"縫","缞":"縗","缟":"縞","缠":"纏","缡":"縭","缢":"縊","缣":"縑","缤":"繽","缥":"縹","缦":"縵","缧":"縲","缨":"纓","缩":"縮","缪":"繆","缫":"繅","缬":"纈","缭":"繚","缮":"繕","缯":"繒","缰":"繮","缱":"繾","缲":"繰","缳":"繯","缴":"繳","缵":"纘","罂":"罌","网":"網","罗":"羅","罚":"罰","罢":"罷","罴":"羆","羁":"羈","羟":"羥","羡":"羨","翘":"翹","翙":"翽","翚":"翬","耢":"耮","耧":"耬","耸":"聳","耻":"恥","聂":"聶","聋":"聾","职":"職","聍":"聹","联":"聯","聩":"聵","聪":"聰","肃":"肅","肠":"腸","肤":"膚","肮":"骯","肾":"腎","肿":"腫","胀":"脹","胁":"脅","胆":"膽","胜":"勝","胧":"朧","胨":"腖","胪":"臚","胫":"脛","胶":"膠","脉":"脈","脍":"膾","脏":"髒","脐":"臍","脑":"腦","脓":"膿","脔":"臠","脚":"腳","脱":"脫","脶":"腡","脸":"臉","腊":"臘","腌":"醃","腘":"膕","腭":"齶","腻":"膩","腽":"膃","腾":"騰","膑":"臏","膻":"羶","臜":"臢","舆":"輿","舍":"捨","舣":"艤","舰":"艦","舱":"艙","舻":"艫","艰":"艱","艳":"艷","艺":"藝","节":"節","芈":"羋","芗":"薌","芜":"蕪","芦":"蘆","苁":"蓯","苇":"葦","苈":"藶","苋":"莧","苌":"萇","苍":"蒼","苎":"苧","苏":"蘇","苧":"薴","苹":"蘋","范":"範","茎":"莖","茏":"蘢","茑":"蔦","茔":"塋","茕":"煢","茧":"繭","荆":"荊","荐":"薦","荙":"薘","荚":"莢","荛":"蕘","荜":"蓽","荞":"蕎","荟":"薈","荠":"薺","荡":"蕩","荣":"榮","荤":"葷","荥":"滎","荦":"犖","荧":"熒","荨":"蕁","荩":"藎","荪":"蓀","荫":"蔭","荬":"蕒","荭":"葒","荮":"葤","药":"藥","莅":"蒞","莱":"萊","莲":"蓮","莳":"蒔","莴":"萵","莶":"薟","获":"獲","莸":"蕕","莹":"瑩","莺":"鶯","莼":"蒓","萚":"蘀","萝":"蘿","萤":"螢","营":"營","萦":"縈","萧":"蕭","萨":"薩","葱":"蔥","蒇":"蕆","蒉":"蕢","蒋":"蔣","蒌":"蔞","蓝":"藍","蓟":"薊","蓠":"蘺","蓣":"蕷","蓥":"鎣","蓦":"驀","蔂":"虆","蔷":"薔","蔹":"蘞","蔺":"藺","蔼":"藹","蕰":"薀","蕲":"蘄","蕴":"蘊","薮":"藪","藓":"蘚","蘖":"櫱","虏":"虜","虑":"慮","虚":"虛","虫":"蟲","虬":"虯","虮":"蟣","虱":"蝨","虽":"雖","虾":"蝦","虿":"蠆","蚀":"蝕","蚁":"蟻","蚂":"螞","蚕":"蠶","蚝":"蠔","蚬":"蜆","蛊":"蠱","蛎":"蠣","蛏":"蟶","蛮":"蠻","蛰":"蟄","蛱":"蛺","蛲":"蟯","蛳":"螄","蛴":"蠐","蜕":"蛻","蜗":"蝸","蜡":"蠟","蝇":"蠅","蝈":"蟈","蝉":"蟬","蝎":"蠍","蝼":"螻","蝾":"蠑","螀":"螿","螨":"蟎","蟏":"蠨","衅":"釁","衔":"銜","补":"補","衬":"襯","衮":"袞","袄":"襖","袅":"裊","袆":"褘","袜":"襪","袭":"襲","袯":"襏","装":"裝","裆":"襠","裈":"褌","裢":"褳","裣":"襝","裤":"褲","裥":"襇","褛":"褸","褴":"襤","襕":"襴","见":"見","观":"觀","觃":"覎","规":"規","觅":"覓","视":"視","觇":"覘","览":"覽","觉":"覺","觊":"覬","觋":"覡","觌":"覿","觍":"覥","觎":"覦","觏":"覯","觐":"覲","觑":"覷","觞":"觴","触":"觸","觯":"觶","訚":"誾","詟":"讋","誉":"譽","誊":"謄","讠":"訁","计":"計","订":"訂","讣":"訃","认":"認","讥":"譏","讦":"訐","讧":"訌","讨":"討","让":"讓","讪":"訕","讫":"訖","讬":"託","训":"訓","议":"議","讯":"訊","记":"記","讱":"訒","讲":"講","讳":"諱","讴":"謳","讵":"詎","讶":"訝","讷":"訥","许":"許","讹":"訛","论":"論","讻":"訩","讼":"訟","讽":"諷","设":"設","访":"訪","诀":"訣","证":"證","诂":"詁","诃":"訶","评":"評","诅":"詛","识":"識","诇":"詗","诈":"詐","诉":"訴","诊":"診","诋":"詆","诌":"謅","词":"詞","诎":"詘","诏":"詔","诐":"詖","译":"譯","诒":"詒","诓":"誆","诔":"誄","试":"試","诖":"詿","诗":"詩","诘":"詰","诙":"詼","诚":"誠","诛":"誅","诜":"詵","话":"話","诞":"誕","诟":"詬","诠":"詮","诡":"詭","询":"詢","诣":"詣","诤":"諍","该":"該","详":"詳","诧":"詫","诨":"諢","诩":"詡","诪":"譸","诫":"誡","诬":"誣","语":"語","诮":"誚","误":"誤","诰":"誥","诱":"誘","诲":"誨","诳":"誑","说":"說","诵":"誦","诶":"誒","请":"請","诸":"諸","诹":"諏","诺":"諾","读":"讀","诼":"諑","诽":"誹","课":"課","诿":"諉","谀":"諛","谁":"誰","谂":"諗","调":"調","谄":"諂","谅":"諒","谆":"諄","谇":"誶","谈":"談","谊":"誼","谋":"謀","谌":"諶","谍":"諜","谎":"謊","谏":"諫","谐":"諧","谑":"謔","谒":"謁","谓":"謂","谔":"諤","谕":"諭","谖":"諼","谗":"讒","谘":"諮","谙":"諳","谚":"諺","谛":"諦","谜":"謎","谝":"諞","谞":"諝","谟":"謨","谠":"讜","谡":"謖","谢":"謝","谣":"謠","谤":"謗","谥":"謚","谦":"謙","谧":"謐","谨":"謹","谩":"謾","谪":"謫","谫":"謭","谬":"謬","谭":"譚","谮":"譖","谯":"譙","谰":"讕","谱":"譜","谲":"譎","谳":"讞","谴":"譴","谵":"譫","谶":"讖","豮":"豶","贝":"貝","贞":"貞","负":"負","贠":"貟","贡":"貢","财":"財","责":"責","贤":"賢","败":"敗","账":"賬","货":"貨","质":"質","贩":"販","贪":"貪","贫":"貧","贬":"貶","购":"購","贮":"貯","贯":"貫","贰":"貳","贱":"賤","贲":"賁","贳":"貰","贴":"貼","贵":"貴","贶":"貺","贷":"貸","贸":"貿","费":"費","贺":"賀","贻":"貽","贼":"賊","贽":"贄","贾":"賈","贿":"賄","赀":"貲","赁":"賃","赂":"賂","赃":"贓","资":"資","赅":"賅","赆":"贐","赇":"賕","赈":"賑","赉":"賚","赊":"賒","赋":"賦","赌":"賭","赍":"賫","赎":"贖","赏":"賞","赐":"賜","赑":"贔","赒":"賙","赓":"賡","赔":"賠","赕":"賧","赖":"賴","赗":"賵","赘":"贅","赙":"賻","赚":"賺","赛":"賽","赜":"賾","赝":"贋","赞":"贊","赟":"贇","赠":"贈","赡":"贍","赢":"贏","赣":"贛","赪":"赬","赵":"趙","赶":"趕","趋":"趨","趱":"趲","趸":"躉","跃":"躍","跄":"蹌","跞":"躒","践":"踐","跶":"躂","跷":"蹺","跸":"蹕","跹":"躚","跻":"躋","踊":"踴","踌":"躊","踪":"蹤","踬":"躓","踯":"躑","蹑":"躡","蹒":"蹣","蹰":"躕","蹿":"躥","躏":"躪","躜":"躦","躯":"軀","车":"車","轧":"軋","轨":"軌","轩":"軒","轪":"軑","轫":"軔","转":"轉","轭":"軛","轮":"輪","软":"軟","轰":"轟","轱":"軲","轲":"軻","轳":"轤","轴":"軸","轵":"軹","轶":"軼","轷":"軤","轸":"軫","轹":"轢","轺":"軺","轻":"輕","轼":"軾","载":"載","轾":"輊","轿":"轎","辀":"輈","辁":"輇","辂":"輅","较":"較","辄":"輒","辅":"輔","辆":"輛","辇":"輦","辈":"輩","辉":"輝","辊":"輥","辋":"輞","辌":"輬","辍":"輟","辎":"輜","辏":"輳","辐":"輻","辑":"輯","辒":"轀","输":"輸","辔":"轡","辕":"轅","辖":"轄","辗":"輾","辘":"轆","辙":"轍","辚":"轔","辞":"辭","辩":"辯","辫":"辮","边":"邊","辽":"遼","达":"達","迁":"遷","过":"過","迈":"邁","运":"運","还":"還","这":"這","进":"進","远":"遠","违":"違","连":"連","迟":"遲","迩":"邇","迳":"逕","迹":"跡","适":"適","选":"選","逊":"遜","递":"遞","逦":"邐","逻":"邏","遗":"遺","遥":"遙","邓":"鄧","邝":"鄺","邬":"鄔","邮":"郵","邹":"鄒","邺":"鄴","邻":"鄰","郏":"郟","郐":"鄶","郑":"鄭","郓":"鄆","郦":"酈","郧":"鄖","郸":"鄲","酂":"酇","酝":"醖","酦":"醱","酱":"醬","酽":"釅","酾":"釃","酿":"釀","采":"採","释":"釋","鉴":"鑒","銮":"鑾","錾":"鏨","钅":"釒","钆":"釓","钇":"釔","针":"針","钉":"釘","钊":"釗","钋":"釙","钌":"釕","钍":"釷","钎":"釺","钏":"釧","钐":"釤","钑":"鈒","钒":"釩","钓":"釣","钔":"鍆","钕":"釹","钖":"鍚","钗":"釵","钘":"鈃","钙":"鈣","钚":"鈈","钛":"鈦","钜":"鉅","钝":"鈍","钞":"鈔","钟":"鐘","钠":"鈉","钡":"鋇","钢":"鋼","钣":"鈑","钤":"鈐","钥":"鑰","钦":"欽","钧":"鈞","钨":"鎢","钩":"鈎","钪":"鈧","钫":"鈁","钬":"鈥","钭":"鈄","钮":"鈕","钯":"鈀","钰":"鈺","钱":"錢","钲":"鉦","钳":"鉗","钴":"鈷","钵":"鉢","钶":"鈳","钷":"鉕","钸":"鈽","钹":"鈸","钺":"鉞","钻":"鑽","钼":"鉬","钽":"鉭","钾":"鉀","钿":"鈿","铀":"鈾","铁":"鐵","铂":"鉑","铃":"鈴","铄":"鑠","铅":"鉛","铆":"鉚","铇":"鉋","铈":"鈰","铉":"鉉","铊":"鉈","铋":"鉍","铌":"鈮","铍":"鈹","铎":"鐸","铏":"鉶","铐":"銬","铑":"銠","铒":"鉺","铓":"鋩","铔":"錏","铕":"銪","铖":"鋮","铗":"鋏","铘":"鋣","铙":"鐃","铚":"銍","铛":"鐺","铜":"銅","铝":"鋁","铞":"銱","铟":"銦","铠":"鎧","铡":"鍘","铢":"銖","铣":"銑","铤":"鋌","铥":"銩","铦":"銛","铧":"鏵","铨":"銓","铩":"鎩","铪":"鉿","铫":"銚","铬":"鉻","铭":"銘","铮":"錚","铯":"銫","铰":"鉸","铱":"銥","铲":"鏟","铳":"銃","铴":"鐋","铵":"銨","银":"銀","铷":"銣","铸":"鑄","铹":"鐒","铺":"鋪","铻":"鋙","铼":"錸","铽":"鋱","链":"鏈","铿":"鏗","销":"銷","锁":"鎖","锂":"鋰","锃":"鋥","锄":"鋤","锅":"鍋","锆":"鋯","锇":"鋨","锈":"鏽","锉":"銼","锊":"鋝","锋":"鋒","锌":"鋅","锍":"鋶","锎":"鐦","锏":"鐧","锐":"銳","锑":"銻","锒":"鋃","锓":"鋟","锔":"鋦","锕":"錒","锖":"錆","锗":"鍺","锘":"鍩","错":"錯","锚":"錨","锛":"錛","锜":"錡","锝":"鍀","锞":"錁","锟":"錕","锠":"錩","锡":"錫","锢":"錮","锣":"鑼","锤":"錘","锥":"錐","锦":"錦","锧":"鑕","锨":"鍁","锩":"錈","锪":"鍃","锫":"錇","锬":"錟","锭":"錠","键":"鍵","锯":"鋸","锰":"錳","锱":"錙","锲":"鍥","锳":"鍈","锴":"鍇","锵":"鏘","锶":"鍶","锷":"鍔","锸":"鍤","锹":"鍬","锺":"鍾","锻":"鍛","锼":"鎪","锽":"鍠","锾":"鍰","锿":"鎄","镀":"鍍","镁":"鎂","镂":"鏤","镃":"鎡","镄":"鐨","镅":"鎇","镆":"鏌","镇":"鎮","镈":"鎛","镉":"鎘","镊":"鑷","镋":"鎲","镌":"鐫","镍":"鎳","镎":"鎿","镏":"鎦","镐":"鎬","镑":"鎊","镒":"鎰","镓":"鎵","镔":"鑌","镕":"鎔","镖":"鏢","镗":"鏜","镘":"鏝","镙":"鏍","镚":"鏰","镛":"鏞","镜":"鏡","镝":"鏑","镞":"鏃","镟":"鏇","镠":"鏐","镡":"鐔","镢":"鐝","镣":"鐐","镤":"鏷","镥":"鑥","镦":"鐓","镧":"鑭","镨":"鐠","镩":"鑹","镪":"鏹","镫":"鐙","镬":"鑊","镭":"鐳","镮":"鐶","镯":"鐲","镰":"鐮","镱":"鐿","镲":"鑔","镳":"鑣","镴":"鑞","镵":"鑱","镶":"鑲","长":"長","门":"門","闩":"閂","闪":"閃","闫":"閆","闬":"閈","闭":"閉","问":"問","闯":"闖","闰":"閏","闱":"闈","闲":"閒","闳":"閎","间":"間","闵":"閔","闶":"閌","闷":"悶","闸":"閘","闹":"鬧","闺":"閨","闻":"聞","闼":"闥","闽":"閩","闾":"閭","闿":"闓","阀":"閥","阁":"閣","阂":"閡","阃":"閫","阄":"鬮","阅":"閱","阆":"閬","阇":"闍","阈":"閾","阉":"閹","阊":"閶","阋":"鬩","阌":"閿","阍":"閽","阎":"閻","阏":"閼","阐":"闡","阑":"闌","阒":"闃","阓":"闠","阔":"闊","阕":"闋","阖":"闔","阗":"闐","阘":"闒","阙":"闕","阚":"闞","阛":"闤","队":"隊","阳":"陽","阴":"陰","阵":"陣","阶":"階","际":"際","陆":"陸","陇":"隴","陈":"陳","陉":"陘","陕":"陝","陧":"隉","陨":"隕","险":"險","随":"隨","隐":"隱","隶":"隸","隽":"雋","难":"難","雏":"雛","雠":"讎","雳":"靂","雾":"霧","霁":"霽","霡":"霢","霭":"靄","靓":"靚","静":"靜","靥":"靨","鞑":"韃","鞒":"鞽","鞯":"韉","韦":"韋","韧":"韌","韨":"韍","韩":"韓","韪":"韙","韫":"韞","韬":"韜","韵":"韻","页":"頁","顶":"頂","顷":"頃","顸":"頇","项":"項","顺":"順","须":"須","顼":"頊","顽":"頑","顾":"顧","顿":"頓","颀":"頎","颁":"頒","颂":"頌","颃":"頏","预":"預","颅":"顱","领":"領","颇":"頗","颈":"頸","颉":"頡","颊":"頰","颋":"頲","颌":"頜","颍":"潁","颎":"熲","颏":"頦","颐":"頤","频":"頻","颒":"頮","颓":"頹","颔":"頷","颕":"頴","颖":"穎","颗":"顆","题":"題","颙":"顒","颚":"顎","颛":"顓","颜":"顏","额":"額","颞":"顳","颟":"顢","颠":"顛","颡":"顙","颢":"顥","颤":"顫","颥":"顬","颦":"顰","颧":"顴","风":"風","飏":"颺","飐":"颭","飑":"颮","飒":"颯","飓":"颶","飔":"颸","飕":"颼","飖":"颻","飗":"飀","飘":"飄","飙":"飆","飚":"飈","飞":"飛","飨":"饗","餍":"饜","饣":"飠","饤":"飣","饥":"飢","饦":"飥","饧":"餳","饨":"飩","饩":"餼","饪":"飪","饫":"飫","饬":"飭","饭":"飯","饮":"飲","饯":"餞","饰":"飾","饱":"飽","饲":"飼","饳":"飿","饴":"飴","饵":"餌","饶":"饒","饷":"餉","饸":"餄","饹":"餎","饺":"餃","饻":"餏","饼":"餅","饽":"餑","饾":"餖","饿":"餓","馀":"餘","馁":"餒","馂":"餕","馃":"餜","馄":"餛","馅":"餡","馆":"館","馇":"餷","馈":"饋","馉":"餶","馊":"餿","馋":"饞","馌":"饁","馍":"饃","馎":"餺","馏":"餾","馐":"饈","馑":"饉","馒":"饅","馓":"饊","馔":"饌","馕":"饢","马":"馬","驭":"馭","驮":"馱","驯":"馴","驰":"馳","驱":"驅","驲":"馹","驳":"駁","驴":"驢","驵":"駔","驶":"駛","驷":"駟","驸":"駙","驹":"駒","驺":"騶","驻":"駐","驼":"駝","驽":"駑","驾":"駕","驿":"驛","骀":"駘","骁":"驍","骂":"罵","骃":"駰","骄":"驕","骅":"驊","骆":"駱","骇":"駭","骈":"駢","骉":"驫","骊":"驪","骋":"騁","验":"驗","骍":"騂","骎":"駸","骏":"駿","骐":"騏","骑":"騎","骒":"騍","骓":"騅","骔":"騌","骕":"驌","骖":"驂","骗":"騙","骘":"騭","骙":"騤","骚":"騷","骛":"騖","骜":"驁","骝":"騮","骞":"騫","骟":"騸","骠":"驃","骡":"騾","骢":"驄","骣":"驏","骤":"驟","骥":"驥","骦":"驦","骧":"驤","髅":"髏","髋":"髖","髌":"髕","鬓":"鬢","鬶":"鬹","魇":"魘","魉":"魎","鱼":"魚","鱽":"魛","鱾":"魢","鱿":"魷","鲀":"魨","鲁":"魯","鲂":"魴","鲃":"䰾","鲄":"魺","鲅":"鮁","鲆":"鮃","鲇":"鮎","鲈":"鱸","鲉":"鮋","鲊":"鮓","鲋":"鮒","鲌":"鮊","鲍":"鮑","鲎":"鱟","鲏":"鮍","鲐":"鮐","鲑":"鮭","鲒":"鮚","鲓":"鮳","鲔":"鮪","鲕":"鮞","鲖":"鮦","鲗":"鰂","鲘":"鮜","鲙":"鱠","鲚":"鱭","鲛":"鮫","鲜":"鮮","鲝":"鮺","鲞":"鮝","鲟":"鱘","鲠":"鯁","鲡":"鱺","鲢":"鰱","鲣":"鰹","鲤":"鯉","鲥":"鰣","鲦":"鰷","鲧":"鯀","鲨":"鯊","鲩":"鯇","鲪":"鮶","鲫":"鯽","鲬":"鯒","鲭":"鯖","鲮":"鯪","鲯":"鯕","鲰":"鯫","鲱":"鯡","鲲":"鯤","鲳":"鯧","鲴":"鯝","鲵":"鯢","鲶":"鯰","鲷":"鯛","鲸":"鯨","鲹":"鰺","鲺":"鯴","鲻":"鯔","鲼":"鱝","鲽":"鰈","鲾":"鰏","鲿":"鱨","鳀":"鯷","鳁":"鰮","鳂":"鰃","鳃":"鰓","鳄":"鰐","鳅":"鰍","鳆":"鰒","鳇":"鰉","鳈":"鰁","鳉":"鱂","鳊":"鯿","鳋":"鰠","鳌":"鰲","鳍":"鰭","鳎":"鰨","鳏":"鰥","鳐":"鰩","鳑":"鰟","鳒":"鰜","鳓":"鰳","鳔":"鰾","鳕":"鱈","鳖":"鱉","鳗":"鰻","鳘":"鰵","鳙":"鱅","鳚":"䲁","鳛":"鰼","鳜":"鱖","鳝":"鱔","鳞":"鱗","鳟":"鱒","鳠":"鱯","鳡":"鱤","鳢":"鱧","鳣":"鱣","鳤":"䲘","鸟":"鳥","鸠":"鳩","鸡":"雞","鸢":"鳶","鸣":"鳴","鸤":"鳲","鸥":"鷗","鸦":"鴉","鸧":"鶬","鸨":"鴇","鸩":"鴆","鸪":"鴣","鸫":"鶇","鸬":"鸕","鸭":"鴨","鸮":"鴞","鸯":"鴦","鸰":"鴒","鸱":"鴟","鸲":"鴝","鸳":"鴛","鸴":"鷽","鸵":"鴕","鸶":"鷥","鸷":"鷙","鸸":"鴯","鸹":"鴰","鸺":"鵂","鸻":"鴴","鸼":"鵃","鸽":"鴿","鸾":"鸞","鸿":"鴻","鹀":"鵐","鹁":"鵓","鹂":"鸝","鹃":"鵑","鹄":"鵠","鹅":"鵝","鹆":"鵒","鹇":"鷳","鹈":"鵜","鹉":"鵡","鹊":"鵲","鹋":"鶓","鹌":"鵪","鹍":"鵾","鹎":"鵯","鹏":"鵬","鹐":"鵮","鹑":"鶉","鹒":"鶊","鹓":"鵷","鹔":"鷫","鹕":"鶘","鹖":"鶡","鹗":"鶚","鹘":"鶻","鹙":"鶖","鹚":"鷀","鹛":"鶥","鹜":"鶩","鹝":"鷊","鹞":"鷂","鹟":"鶲","鹠":"鶹","鹡":"鶺","鹢":"鷁","鹣":"鶼","鹤":"鶴","鹥":"鷖","鹦":"鸚","鹧":"鷓","鹨":"鷚","鹩":"鷯","鹪":"鷦","鹫":"鷲","鹬":"鷸","鹭":"鷺","鹮":"䴉","鹯":"鸇","鹰":"鷹","鹱":"鸌","鹲":"鸏","鹳":"鸛","鹴":"鸘","鹾":"鹺","麦":"麥","麸":"麩","麹":"麴","黄":"黃","黉":"黌","黡":"黶","黩":"黷","黪":"黲","黾":"黽","鼋":"黿","鼍":"鼉","鼗":"鞀","鼹":"鼴","齐":"齊","齑":"齏","齿":"齒","龀":"齔","龁":"齕","龂":"齗","龃":"齟","龄":"齡","龅":"齙","龆":"齠","龇":"齜","龈":"齦","龉":"齬","龊":"齪","龋":"齲","龌":"齷","龙":"龍","龚":"龔","龛":"龕","龟":"龜","鿎":"䃮","鿏":"䥑","鿔":"鎶","鿭":"鉨"};
+
+function showPage(id){
+  pages.forEach(p=>p.classList.toggle('active',p.id===id));
+  const top=(id==='attendance'||id==='newOT'||id==='newLeave')?'attendance':'drafts';
+  nav.forEach(b=>b.classList.toggle('active',b.dataset.page===top));
+  if(id==='attendance') renderOTRecords();
+  if(id!=='detail') clearDetailPhotoUrls();
+  window.scrollTo(0,0);
+}
+function switchBook(id,btn){document.querySelectorAll('.book').forEach(b=>b.classList.toggle('active',b.id===id));document.querySelectorAll('.subtab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(id==='leaveBook')renderLeaveRecords();if(id==='otBook')renderOTRecords()}
+function openLeaveTab(){const b=document.querySelectorAll('.subtab')[1];if(b)switchBook('leaveBook',b)}
+nav.forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+function setSync(text,ok=true){const s=document.getElementById('syncState');s.textContent=text;s.style.color=ok?'var(--ok)':'var(--accent)'}
+function demoSave(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700)}
+function fakeSync(doneText){demoSave(doneText)}
+function saveThenBack(msg,page){fakeSync(msg);setTimeout(()=>showPage(page),650)}
+
+
+
+const DESK_TEMPLATE_BUCKET='desk-templates';
+const DESK_TEMPLATE_FILENAME='01.ot claim form.xlsx';
+let pendingOTExportAfterTemplateUpload=false;
+const OT_CLAIM_MAX_RECORDS=9;
+const OT_CLAIM_NORMAL_FROM='09:00';
+const OT_CLAIM_NORMAL_TO='18:00';
+const OT_CLAIM_NAME='CHEN CHOI PIN';
+
+const OT_STORAGE_KEY='deskLahOtRecordsV1';
+const OT_TOMBSTONE_KEY='deskLahOtTombstonesV1';
+let currentOTRecordId=null;
+let currentOTMonthStart=new Date();
+currentOTMonthStart=new Date(currentOTMonthStart.getFullYear(),currentOTMonthStart.getMonth(),1);
+
+function readOTRecords(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(OT_STORAGE_KEY)||'[]');
+    return Array.isArray(parsed)?parsed:[];
+  }catch(error){
+    console.warn('Desk Lah! OT records could not be read.',error);
+    return [];
+  }
+}
+function writeOTRecords(records){localStorage.setItem(OT_STORAGE_KEY,JSON.stringify(records||[]))}
+function readOTTombstones(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(OT_TOMBSTONE_KEY)||'{}');
+    return parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?parsed:{};
+  }catch(error){
+    console.warn('Desk Lah! OT tombstones could not be read.',error);
+    return {};
+  }
+}
+function writeOTTombstones(tombstones){localStorage.setItem(OT_TOMBSTONE_KEY,JSON.stringify(tombstones||{}))}
+function markLocalOTTombstone(record,deletedAt=new Date().toISOString()){
+  if(!record||!record.id) return;
+  const tombstones=readOTTombstones();
+  tombstones[String(record.id)]={...record,id:String(record.id),deleted_at:deletedAt};
+  writeOTTombstones(tombstones);
+}
+function clearLocalOTTombstone(id){
+  const tombstones=readOTTombstones();
+  if(Object.prototype.hasOwnProperty.call(tombstones,String(id))){delete tombstones[String(id)];writeOTTombstones(tombstones)}
+}
+function formatOTMonthLabel(date){return `${date.getFullYear()} · ${date.getMonth()+1}月`}
+function formatOTDateLabel(isoDate){
+  const parts=String(isoDate||'').split('-');
+  if(parts.length!==3) return isoDate||'';
+  const monthNames=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${parts[2]} ${monthNames[Math.max(0,Math.min(11,Number(parts[1])-1))]}`;
+}
+function isOTInCurrentMonth(record){
+  const value=String(record&&record.work_date||'');
+  const prefix=`${currentOTMonthStart.getFullYear()}-${String(currentOTMonthStart.getMonth()+1).padStart(2,'0')}-`;
+  return value.startsWith(prefix);
+}
+function renderOTRecords(){
+  const ledger=document.getElementById('otLedger');
+  const empty=document.getElementById('otEmpty');
+  const label=document.getElementById('otMonthLabel');
+  if(!ledger||!empty||!label) return;
+  label.textContent=formatOTMonthLabel(currentOTMonthStart);
+  const records=readOTRecords().filter(isOTInCurrentMonth).sort((a,b)=>{
+    const dateCompare=String(b.work_date||'').localeCompare(String(a.work_date||''));
+    if(dateCompare!==0) return dateCompare;
+    return String(b.start_time||'').localeCompare(String(a.start_time||''));
+  });
+  ledger.innerHTML='';
+  empty.style.display=records.length?'none':'block';
+  records.forEach(record=>{
+    const row=document.createElement('div');
+    row.className='ot';
+    row.tabIndex=0;
+    row.setAttribute('role','button');
+    row.setAttribute('aria-label',`編輯 ${record.work_date||''} ${record.programme||'加班紀錄'}`);
+    row.onclick=()=>openOTRecord(record.id);
+    row.onkeydown=(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openOTRecord(record.id)}};
+
+    const date=document.createElement('div');
+    date.className='otdate';
+    date.textContent=formatOTDateLabel(record.work_date);
+
+    const main=document.createElement('div');
+    main.className='otmain';
+    const strong=document.createElement('strong');
+    strong.textContent=record.programme||'（未填節目 / 工作）';
+    const location=document.createElement('div');
+    location.textContent=record.location||'（未填地點）';
+    main.append(strong,location);
+
+    const time=document.createElement('div');
+    time.className='ottime';
+    time.textContent=`${record.start_time||'--:--'} — ${record.end_time||'--:--'}`;
+    row.append(date,main,time);
+    ledger.appendChild(row);
+  });
+}
+function changeOTMonth(delta){
+  currentOTMonthStart=new Date(currentOTMonthStart.getFullYear(),currentOTMonthStart.getMonth()+Number(delta||0),1);
+  renderOTRecords();
+}
+function setOTForm(record=null){
+  currentOTRecordId=record&&record.id?String(record.id):null;
+  const today=new Date();
+  const todayText=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('otWorkDate').value=record&&record.work_date?record.work_date:todayText;
+  document.getElementById('otStartTime').value=record&&record.start_time?record.start_time:'';
+  document.getElementById('otEndTime').value=record&&record.end_time?record.end_time:'';
+  document.getElementById('otProgramme').value=record&&record.programme?record.programme:'';
+  document.getElementById('otLocation').value=record&&record.location?record.location:'';
+  document.getElementById('otFormEyebrow').textContent=currentOTRecordId?'EDIT OT RECORD':'NEW OT RECORD';
+  document.getElementById('otFormTitle').textContent=currentOTRecordId?'編輯加班紀錄':'記一筆加班';
+  document.getElementById('otDeleteArea').style.display=currentOTRecordId?'block':'none';
+}
+function openNewOTForm(){setOTForm(null);showPage('newOT')}
+function openOTRecord(id){
+  const record=readOTRecords().find(item=>String(item.id)===String(id));
+  if(!record){demoSave('找不到這筆加班紀錄');renderOTRecords();return;}
+  setOTForm(record);
+  showPage('newOT');
+}
+function returnToOTBook(){
+  currentOTRecordId=null;
+  showPage('attendance');
+  const first=document.querySelector('.subtab');
+  if(first) switchBook('otBook',first);
+  renderOTRecords();
+}
+async function syncOTToCloud(record){
+  if(!record) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){setSync('需要登入',false);return false;}
+    const tableReady=await checkDeskOtTable({openGateOnFail:false});
+    if(!tableReady) return false;
+    setSync('同步中…',true);
+    const payload={
+      id:String(record.id),
+      user_id:user.id,
+      work_date:record.work_date,
+      start_time:record.start_time,
+      end_time:record.end_time,
+      programme:String(record.programme||''),
+      location:String(record.location||''),
+      created_at:record.created_at||new Date().toISOString(),
+      updated_at:record.updated_at||record.created_at||new Date().toISOString(),
+      is_deleted:false
+    };
+    const {error}=await deskSupabase.from('ot_records').upsert(payload,{onConflict:'id'});
+    if(error) throw error;
+    clearLocalOTTombstone(record.id);
+    setSync('✓ 已同步',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! OT save auto sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    if(error && /ot_records|relation|schema cache/i.test(String(error.message||''))){
+      showCloudStep('otTable');
+      const box=document.getElementById('cloudOtSqlText'); if(box) box.value=DESK_OT_SQL;
+      setCloudMessage(`ot_records 尚未可用：${error.message||'請先建立 table / RLS。'}`);
+      showCloudGate();
+    }
+    return false;
+  }
+}
+
+async function syncOTDeletionToCloud(record,deletedAt){
+  if(!record) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){setSync('需要登入',false);return false;}
+    const tableReady=await checkDeskOtTable({openGateOnFail:false});
+    if(!tableReady) return false;
+    setSync('同步中…',true);
+    const payload={
+      id:String(record.id),
+      user_id:user.id,
+      work_date:record.work_date,
+      start_time:record.start_time,
+      end_time:record.end_time,
+      programme:String(record.programme||''),
+      location:String(record.location||''),
+      created_at:record.created_at||deletedAt||new Date().toISOString(),
+      updated_at:deletedAt||new Date().toISOString(),
+      is_deleted:true
+    };
+    const {error}=await deskSupabase.from('ot_records').upsert(payload,{onConflict:'id'});
+    if(error) throw error;
+    clearLocalOTTombstone(record.id);
+    setSync('✓ 已同步',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! OT delete auto sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    return false;
+  }
+}
+
+async function retryPendingOTDeletions(){
+  const tombstones=readOTTombstones();
+  for(const [id,row] of Object.entries(tombstones)){
+    const deletedAt=row&&row.deleted_at?row.deleted_at:new Date().toISOString();
+    const ok=await syncOTDeletionToCloud({...row,id},deletedAt);
+    if(!ok) break;
+  }
+}
+
+let otCloudPullInFlight=null;
+async function pullOTRecordsFromCloud({quiet=false,reason='manual'}={}){
+  if(otCloudPullInFlight) return otCloudPullInFlight;
+  otCloudPullInFlight=(async()=>{
+    try{
+      if(!deskSupabase) createDeskSupabase();
+      const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+      if(userError) throw userError;
+      const user=userData&&userData.user;
+      if(!user) return null;
+      const tableReady=await checkDeskOtTable({openGateOnFail:false});
+      if(!tableReady) return null;
+      setSync('同步中…',true);
+      const {data:cloudRows,error}=await deskSupabase
+        .from('ot_records')
+        .select('id,work_date,start_time,end_time,programme,location,created_at,updated_at,is_deleted')
+        .order('updated_at',{ascending:false});
+      if(error) throw error;
+      const local=readOTRecords();
+      const localMap=new Map(local.map(item=>[String(item.id),{...item}]));
+      const tombstones=readOTTombstones();
+      let added=0,updated=0,removed=0,keptLocal=0;
+      for(const row of (cloudRows||[])){
+        const id=String(row.id);
+        const cloudTime=isoTime(row.updated_at||row.created_at);
+        const localRecord=localMap.get(id);
+        const localTime=localRecord?isoTime(localRecord.updated_at||localRecord.created_at):0;
+        const tombstone=row&&tombstones[id];
+        const tombstoneTime=isoTime(tombstone&&tombstone.deleted_at);
+        if(row.is_deleted===true){
+          if(localRecord && cloudTime>=localTime){localMap.delete(id);removed++;}
+          if(cloudTime>=tombstoneTime) tombstones[id]={...row,id,deleted_at:row.updated_at||new Date().toISOString()};
+          continue;
+        }
+        if(tombstoneTime && tombstoneTime>=cloudTime){keptLocal++;continue;}
+        if(!localRecord){
+          localMap.set(id,{id,work_date:row.work_date,start_time:String(row.start_time||'').slice(0,5),end_time:String(row.end_time||'').slice(0,5),programme:String(row.programme||''),location:String(row.location||''),created_at:row.created_at||row.updated_at||new Date().toISOString(),updated_at:row.updated_at||row.created_at||new Date().toISOString()});
+          if(tombstones[id]) delete tombstones[id];
+          added++;
+        }else if(cloudTime>localTime){
+          localMap.set(id,{...localRecord,work_date:row.work_date,start_time:String(row.start_time||'').slice(0,5),end_time:String(row.end_time||'').slice(0,5),programme:String(row.programme||''),location:String(row.location||''),created_at:row.created_at||localRecord.created_at,updated_at:row.updated_at||localRecord.updated_at});
+          if(tombstones[id]) delete tombstones[id];
+          updated++;
+        }else keptLocal++;
+      }
+      writeOTRecords([...localMap.values()]);
+      writeOTTombstones(tombstones);
+      renderOTRecords();
+      setSync('✓ 已同步',true);
+      const changed=added+updated+removed;
+      if(!quiet && changed) demoSave(`加班簿已更新 · 新增 ${added} · 更新 ${updated}${removed?` · 移除 ${removed}`:''}`);
+      console.log('Desk Lah! OT Cloud → Local auto pull',{reason,added,updated,removed,keptLocal,total:(cloudRows||[]).length});
+      return {added,updated,removed,keptLocal};
+    }catch(error){
+      console.error('Desk Lah! OT cloud pull failed.',error);
+      setSync('同步失敗 · 重試',false);
+      if(!quiet) demoSave('加班簿同步失敗');
+      return null;
+    }finally{otCloudPullInFlight=null;}
+  })();
+  return otCloudPullInFlight;
+}
+
+
+function getCurrentMonthOTRecordsForExport(){
+  return readOTRecords().filter(isOTInCurrentMonth).sort((a,b)=>{
+    const dateCompare=String(a.work_date||'').localeCompare(String(b.work_date||''));
+    if(dateCompare!==0) return dateCompare;
+    return String(a.start_time||'').localeCompare(String(b.start_time||''));
+  });
+}
+function formatOTClaimDate(isoDate){
+  const parts=String(isoDate||'').split('-');
+  if(parts.length!==3) return String(isoDate||'');
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+function formatOTClaimMonth(date){
+  const monthNames=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+}
+function calculateOTClaimDuration(startTime,endTime){
+  const parse=(value)=>{
+    const match=String(value||'').match(/^(\d{1,2}):(\d{2})/);
+    if(!match) return null;
+    return Number(match[1])*60+Number(match[2]);
+  };
+  const start=parse(startTime),end=parse(endTime);
+  if(start===null||end===null) return {hours:'',minutes:''};
+  let diff=end-start;
+  if(diff<0) diff+=24*60;
+  return {hours:Math.floor(diff/60),minutes:diff%60};
+}
+async function getDeskAuthenticatedUser(){
+  if(!deskSupabase) createDeskSupabase();
+  const {data,error}=await deskSupabase.auth.getSession();
+  if(error) throw error;
+  const user=data&&data.session&&data.session.user;
+  if(!user) throw new Error('Desk Lah! 尚未登入 Cloud');
+  return user;
+}
+function isMissingTemplateObjectError(error){
+  const message=String((error&&error.message)||'').toLowerCase();
+  const status=Number((error&&error.statusCode)||(error&&error.status)||0);
+  return status===404 || message.includes('not found') || message.includes('object not found');
+}
+async function downloadPrivateOTClaimTemplate(){
+  const user=await getDeskAuthenticatedUser();
+  const objectPath=`${user.id}/${DESK_TEMPLATE_FILENAME}`;
+  const {data,error}=await deskSupabase.storage.from(DESK_TEMPLATE_BUCKET).download(objectPath);
+  if(error){
+    if(isMissingTemplateObjectError(error)) return null;
+    throw error;
+  }
+  return new Uint8Array(await data.arrayBuffer());
+}
+function requestOTClaimTemplateUpload(){
+  const picker=document.getElementById('otTemplatePicker');
+  if(!picker) return;
+  picker.value='';
+  picker.click();
+}
+async function handleOTClaimTemplateSelection(event){
+  const file=event.target.files&&event.target.files[0];
+  event.target.value='';
+  if(!file){pendingOTExportAfterTemplateUpload=false;return;}
+  if(!/\.xlsx$/i.test(file.name)){
+    pendingOTExportAfterTemplateUpload=false;
+    demoSave('請選擇公司 .xlsx 範本');
+    return;
+  }
+  try{
+    const user=await getDeskAuthenticatedUser();
+    const objectPath=`${user.id}/${DESK_TEMPLATE_FILENAME}`;
+    setSync('同步中…');
+    const {error}=await deskSupabase.storage.from(DESK_TEMPLATE_BUCKET).upload(objectPath,file,{
+      upsert:true,
+      contentType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    if(error) throw error;
+    setSync('✓ 已同步',true);
+    demoSave('OT Claim 範本已保存到私人 Cloud');
+    const shouldExport=pendingOTExportAfterTemplateUpload;
+    pendingOTExportAfterTemplateUpload=false;
+    if(shouldExport) await exportOTClaimExcel();
+  }catch(error){
+    pendingOTExportAfterTemplateUpload=false;
+    console.error('Desk Lah! private OT template upload failed.',error);
+    setSync('同步失敗 · 重試',false);
+    const message=String((error&&error.message)||'');
+    demoSave(/bucket/i.test(message)?'請先建立 Template Storage':'OT 範本上傳失敗');
+  }
+}
+function downloadBlob(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+async function exportOTClaimExcel(){
+  if(!window.ExcelJS || typeof window.ExcelJS.Workbook!=='function'){
+    demoSave('Excel 匯出元件載入失敗');
+    return;
+  }
+
+  // Cloud is the source of truth: refresh before producing a claim file.
+  const cloudPull=await pullOTRecordsFromCloud({quiet:true,reason:'excel-export'});
+  if(cloudPull===null){
+    demoSave('Cloud 更新失敗 · 暫不導出');
+    return;
+  }
+
+  const records=getCurrentMonthOTRecordsForExport();
+  if(!records.length){
+    demoSave('這個月沒有 OT 可導出');
+    return;
+  }
+  if(records.length>OT_CLAIM_MAX_RECORDS){
+    demoSave(`本月 ${records.length} 筆 · 公司範本一頁最多 9 筆`);
+    return;
+  }
+
+  try{
+    const workbook=new ExcelJS.Workbook();
+    const templateBytes=await downloadPrivateOTClaimTemplate();
+    if(!templateBytes){
+      pendingOTExportAfterTemplateUpload=true;
+      demoSave('第一次導出 · 請選擇公司 OT Excel 範本');
+      requestOTClaimTemplateUpload();
+      return;
+    }
+    await workbook.xlsx.load(templateBytes);
+    const worksheet=workbook.getWorksheet('App F')||workbook.worksheets[0];
+    if(!worksheet) throw new Error('OT claim worksheet not found');
+
+    // Approved Phase 5.1 mapping.
+    worksheet.getCell('C6').value=OT_CLAIM_NAME;
+    worksheet.getCell('K6').value=formatOTClaimMonth(currentOTMonthStart);
+
+    records.forEach((record,index)=>{
+      const workRow=13+(index*2);
+      const locationRow=workRow+1;
+      const duration=calculateOTClaimDuration(record.start_time,record.end_time);
+
+      worksheet.getCell(`B${workRow}`).value=formatOTClaimDate(record.work_date);
+      worksheet.getCell(`C${workRow}`).value=String(record.programme||'');
+      worksheet.getCell(`D${workRow}`).value=OT_CLAIM_NORMAL_FROM;
+      worksheet.getCell(`E${workRow}`).value=OT_CLAIM_NORMAL_TO;
+      worksheet.getCell(`F${workRow}`).value=String(record.start_time||'').slice(0,5);
+      worksheet.getCell(`G${workRow}`).value=String(record.end_time||'').slice(0,5);
+      worksheet.getCell(`H${workRow}`).value=duration.hours;
+      worksheet.getCell(`I${workRow}`).value=duration.minutes;
+
+      // Company layout: location is the next physical row under JOB PARTICULARS.
+      worksheet.getCell(`C${locationRow}`).value=String(record.location||'');
+
+      // TOTAL RM / REMARKS intentionally untouched. No invented rate / level rules.
+    });
+
+    const output=await workbook.xlsx.writeBuffer();
+    const blob=new Blob([output],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const year=currentOTMonthStart.getFullYear();
+    const month=String(currentOTMonthStart.getMonth()+1).padStart(2,'0');
+    downloadBlob(blob,`01.ot claim form - ${year}-${month}.xlsx`);
+    demoSave(`OT Claim 已導出 · ${records.length} 筆`);
+  }catch(error){
+    console.error('Desk Lah! OT Claim export failed.',error);
+    demoSave('OT Claim 導出失敗');
+  }
+}
+
+async function saveOTRecord(){
+  const workDate=document.getElementById('otWorkDate');
+  const startTime=document.getElementById('otStartTime');
+  const endTime=document.getElementById('otEndTime');
+  const programme=document.getElementById('otProgramme');
+  const location=document.getElementById('otLocation');
+  if(!workDate.value){demoSave('請選擇日期');workDate.focus();return;}
+  if(!startTime.value){demoSave('請填開始時間');startTime.focus();return;}
+  if(!endTime.value){demoSave('請填結束時間');endTime.focus();return;}
+  const records=readOTRecords();
+  const now=new Date().toISOString();
+  let savedRecord=null;
+  const wasEditing=Boolean(currentOTRecordId);
+  if(currentOTRecordId){
+    const index=records.findIndex(item=>String(item.id)===String(currentOTRecordId));
+    if(index<0){demoSave('找不到這筆加班紀錄');returnToOTBook();return;}
+    records[index]={...records[index],work_date:workDate.value,start_time:startTime.value,end_time:endTime.value,programme:programme.value.trim(),location:location.value.trim(),updated_at:now};
+    savedRecord=records[index];
+  }else{
+    const id=crypto.randomUUID?crypto.randomUUID():`ot-${Date.now()}`;
+    savedRecord={id,work_date:workDate.value,start_time:startTime.value,end_time:endTime.value,programme:programme.value.trim(),location:location.value.trim(),created_at:now,updated_at:now};
+    records.push(savedRecord);
+  }
+  clearLocalOTTombstone(savedRecord.id);
+  try{writeOTRecords(records)}catch(error){console.error('Desk Lah! OT save failed.',error);demoSave('加班紀錄保存失敗');return;}
+  currentOTMonthStart=new Date(Number(workDate.value.slice(0,4)),Number(workDate.value.slice(5,7))-1,1);
+  returnToOTBook();
+  const synced=await syncOTToCloud(savedRecord);
+  demoSave(synced?(wasEditing?'加班紀錄已更新':'加班紀錄已保存'):(wasEditing?'加班紀錄已更新本機 · Cloud 同步失敗':'加班紀錄已保存本機 · Cloud 同步失敗'));
+}
+
+async function deleteCurrentOTRecord(){
+  if(!currentOTRecordId) return;
+  if(!confirm('刪除這筆加班紀錄？')) return;
+  const records=readOTRecords();
+  const record=records.find(item=>String(item.id)===String(currentOTRecordId));
+  if(!record){demoSave('找不到這筆加班紀錄');returnToOTBook();return;}
+  const deletedAt=new Date().toISOString();
+  const remaining=records.filter(item=>String(item.id)!==String(currentOTRecordId));
+  try{writeOTRecords(remaining);markLocalOTTombstone(record,deletedAt)}catch(error){console.error('Desk Lah! OT delete failed.',error);demoSave('刪除失敗');return;}
+  currentOTRecordId=null;
+  returnToOTBook();
+  const synced=await syncOTDeletionToCloud(record,deletedAt);
+  demoSave(synced?'加班紀錄已刪除':'加班紀錄已刪除本機 · Cloud 同步失敗');
+}
+
+const LEAVE_STORAGE_KEY='deskLahLeaveTransactionsV1';
+const LEAVE_TOMBSTONE_KEY='deskLahLeaveTombstonesV1';
+const ANNUAL_LEAVE_ALLOWANCE=22;
+let currentLeaveRecordId=null;
+let currentLeaveYear=new Date().getFullYear();
+
+function readLeaveRecords(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(LEAVE_STORAGE_KEY)||'[]');
+    return Array.isArray(parsed)?parsed:[];
+  }catch(error){
+    console.warn('Desk Lah! leave records could not be read.',error);
+    return [];
+  }
+}
+function writeLeaveRecords(records){localStorage.setItem(LEAVE_STORAGE_KEY,JSON.stringify(records||[]))}
+function readLeaveTombstones(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(LEAVE_TOMBSTONE_KEY)||'{}');
+    return parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?parsed:{};
+  }catch(error){
+    console.warn('Desk Lah! leave tombstones could not be read.',error);
+    return {};
+  }
+}
+function writeLeaveTombstones(tombstones){localStorage.setItem(LEAVE_TOMBSTONE_KEY,JSON.stringify(tombstones||{}))}
+function markLocalLeaveTombstone(record,deletedAt=new Date().toISOString()){
+  if(!record||!record.id) return;
+  const tombstones=readLeaveTombstones();
+  tombstones[String(record.id)]={...record,id:String(record.id),deleted_at:deletedAt};
+  writeLeaveTombstones(tombstones);
+}
+function clearLocalLeaveTombstone(id){
+  const tombstones=readLeaveTombstones();
+  if(Object.prototype.hasOwnProperty.call(tombstones,String(id))){delete tombstones[String(id)];writeLeaveTombstones(tombstones)}
+}
+function formatLeaveType(type){
+  if(type==='annual_use') return '年假';
+  if(type==='replacement_use') return '使用補假';
+  if(type==='replacement_earn') return '獲得補假';
+  return '假期';
+}
+function isLeaveInCurrentYear(record){
+  return String(record&&record.leave_date||'').startsWith(`${currentLeaveYear}-`);
+}
+function getLeaveBalances(records){
+  let annualUsed=0,replacementEarned=0,replacementUsed=0;
+  records.filter(isLeaveInCurrentYear).forEach(record=>{
+    const days=Number(record.days)||0;
+    if(record.type==='annual_use') annualUsed+=days;
+    if(record.type==='replacement_earn') replacementEarned+=days;
+    if(record.type==='replacement_use') replacementUsed+=days;
+  });
+  return {
+    annualUsed,
+    annualRemaining:ANNUAL_LEAVE_ALLOWANCE-annualUsed,
+    replacementEarned,
+    replacementUsed,
+    replacementRemaining:replacementEarned-replacementUsed
+  };
+}
+function renderLeaveRecords(){
+  const ledger=document.getElementById('leaveLedger');
+  const empty=document.getElementById('leaveEmpty');
+  const yearLabel=document.getElementById('leaveYearLabel');
+  if(!ledger||!empty||!yearLabel) return;
+  yearLabel.textContent=`${currentLeaveYear} 假期`;
+  const records=readLeaveRecords().filter(isLeaveInCurrentYear).sort((a,b)=>String(a.leave_date||'').localeCompare(String(b.leave_date||'')));
+  const balances=getLeaveBalances(records);
+  document.getElementById('annualAllowanceValue').textContent=ANNUAL_LEAVE_ALLOWANCE;
+  document.getElementById('annualRemainingValue').textContent=`${balances.annualRemaining} 天`;
+  document.getElementById('replacementEarnedValue').textContent=balances.replacementEarned;
+  document.getElementById('replacementRemainingValue').textContent=`${balances.replacementRemaining} 天`;
+  ledger.innerHTML='';
+  empty.style.display=records.length?'none':'block';
+  records.forEach(record=>{
+    const row=document.createElement('div');
+    row.className='leave-row';
+    row.tabIndex=0;
+    row.setAttribute('role','button');
+    row.setAttribute('aria-label',`編輯 ${record.leave_date||''} ${formatLeaveType(record.type)}`);
+    row.onclick=()=>openLeaveRecord(record.id);
+    row.onkeydown=(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openLeaveRecord(record.id)}};
+
+    const date=document.createElement('div');
+    date.className='otdate';
+    date.textContent=formatOTDateLabel(record.leave_date);
+
+    const main=document.createElement('div');
+    main.className='leave-main';
+    const strong=document.createElement('strong');
+    strong.textContent=formatLeaveType(record.type);
+    const note=document.createElement('div');
+    note.textContent=record.note||`${record.days} 天`;
+    main.append(strong,note);
+
+    const amount=document.createElement('div');
+    const isEarn=record.type==='replacement_earn';
+    amount.className=isEarn?'plus':'minus';
+    amount.textContent=`${isEarn?'＋':'−'}${record.days} 天`;
+    row.append(date,main,amount);
+    ledger.appendChild(row);
+  });
+}
+function setLeaveForm(record=null){
+  currentLeaveRecordId=record&&record.id?String(record.id):null;
+  const today=new Date();
+  const todayText=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('leaveDate').value=record&&record.leave_date?record.leave_date:todayText;
+  document.getElementById('leaveType').value=record&&record.type?record.type:'annual_use';
+  document.getElementById('leaveDays').value=record&&Number.isInteger(Number(record.days))?String(record.days):'1';
+  document.getElementById('leaveNote').value=record&&record.note?record.note:'';
+  document.getElementById('leaveFormEyebrow').textContent=currentLeaveRecordId?'EDIT LEAVE RECORD':'LEAVE RECORD';
+  document.getElementById('leaveFormTitle').textContent=currentLeaveRecordId?'編輯假期紀錄':'記一筆假期';
+  document.getElementById('leaveDeleteArea').style.display=currentLeaveRecordId?'block':'none';
+}
+function openNewLeaveForm(){setLeaveForm(null);showPage('newLeave')}
+function openLeaveRecord(id){
+  const record=readLeaveRecords().find(item=>String(item.id)===String(id));
+  if(!record){demoSave('找不到這筆假期紀錄');renderLeaveRecords();return;}
+  setLeaveForm(record);
+  showPage('newLeave');
+}
+function returnToLeaveBook(){
+  currentLeaveRecordId=null;
+  showPage('attendance');
+  openLeaveTab();
+  renderLeaveRecords();
+}
+async function syncLeaveAllowanceToCloud(year,user,sourceRecord=null){
+  const now=new Date().toISOString();
+  const payload={
+    id:`annual-${year}-${user.id}`,
+    user_id:user.id,
+    year:Number(year),
+    annual_leave_days:ANNUAL_LEAVE_ALLOWANCE,
+    created_at:(sourceRecord&&sourceRecord.created_at)||now,
+    updated_at:now
+  };
+  const {error}=await deskSupabase
+    .from('leave_allowances')
+    .upsert(payload,{onConflict:'user_id,year'});
+  if(error) throw error;
+  return payload;
+}
+
+async function syncLeaveToCloud(record){
+  if(!record) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){setSync('需要登入',false);return false;}
+    const tablesReady=await checkDeskLeaveTables({openGateOnFail:false});
+    if(!tablesReady) return false;
+    setSync('同步中…',true);
+    const year=Number(String(record.leave_date||'').slice(0,4));
+    if(!Number.isInteger(year)) throw new Error('Invalid leave year');
+    await syncLeaveAllowanceToCloud(year,user,record);
+    const payload={
+      id:String(record.id),
+      user_id:user.id,
+      leave_date:record.leave_date,
+      type:record.type,
+      days:Number(record.days),
+      note:String(record.note||''),
+      created_at:record.created_at||new Date().toISOString(),
+      updated_at:record.updated_at||record.created_at||new Date().toISOString(),
+      is_deleted:false
+    };
+    const {error}=await deskSupabase
+      .from('leave_transactions')
+      .upsert(payload,{onConflict:'id'});
+    if(error) throw error;
+    clearLocalLeaveTombstone(record.id);
+    setSync('✓ 已同步',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! Leave save auto sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    if(error && /leave_transactions|leave_allowances|relation|schema cache/i.test(String(error.message||''))){
+      showCloudStep('leaveTable');
+      const box=document.getElementById('cloudLeaveSqlText');if(box)box.value=DESK_LEAVE_SQL;
+      setCloudMessage(`Leave Cloud tables 尚未可用：${error.message||'請先建立 tables / RLS。'}`);
+      showCloudGate();
+    }
+    return false;
+  }
+}
+
+async function syncLeaveDeletionToCloud(record,deletedAt){
+  if(!record) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){setSync('需要登入',false);return false;}
+    const tablesReady=await checkDeskLeaveTables({openGateOnFail:false});
+    if(!tablesReady) return false;
+    setSync('同步中…',true);
+    const year=Number(String(record.leave_date||'').slice(0,4));
+    if(Number.isInteger(year)) await syncLeaveAllowanceToCloud(year,user,record);
+    const payload={
+      id:String(record.id),
+      user_id:user.id,
+      leave_date:record.leave_date,
+      type:record.type,
+      days:Number(record.days),
+      note:String(record.note||''),
+      created_at:record.created_at||deletedAt||new Date().toISOString(),
+      updated_at:deletedAt||new Date().toISOString(),
+      is_deleted:true
+    };
+    const {error}=await deskSupabase
+      .from('leave_transactions')
+      .upsert(payload,{onConflict:'id'});
+    if(error) throw error;
+    clearLocalLeaveTombstone(record.id);
+    setSync('✓ 已同步',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! Leave delete auto sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    return false;
+  }
+}
+
+async function retryPendingLeaveDeletions(){
+  const tombstones=readLeaveTombstones();
+  for(const [id,row] of Object.entries(tombstones)){
+    const deletedAt=row&&row.deleted_at?row.deleted_at:new Date().toISOString();
+    const ok=await syncLeaveDeletionToCloud({...row,id},deletedAt);
+    if(!ok) break;
+  }
+}
+
+let leaveCloudPullInFlight=null;
+async function pullLeaveRecordsFromCloud({quiet=false,reason='manual'}={}){
+  if(leaveCloudPullInFlight) return leaveCloudPullInFlight;
+  leaveCloudPullInFlight=(async()=>{
+    try{
+      if(!deskSupabase) createDeskSupabase();
+      const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+      if(userError) throw userError;
+      const user=userData&&userData.user;
+      if(!user) return null;
+      const tablesReady=await checkDeskLeaveTables({openGateOnFail:false});
+      if(!tablesReady) return null;
+      setSync('同步中…',true);
+      const [{data:cloudRows,error:rowsError},{data:allowanceRows,error:allowanceError}]=await Promise.all([
+        deskSupabase
+          .from('leave_transactions')
+          .select('id,leave_date,type,days,note,created_at,updated_at,is_deleted')
+          .order('updated_at',{ascending:false}),
+        deskSupabase
+          .from('leave_allowances')
+          .select('year,annual_leave_days,updated_at')
+          .order('year',{ascending:false})
+      ]);
+      if(rowsError) throw rowsError;
+      if(allowanceError) throw allowanceError;
+      const invalidAllowance=(allowanceRows||[]).find(row=>Number(row.annual_leave_days)!==ANNUAL_LEAVE_ALLOWANCE);
+      if(invalidAllowance){
+        console.warn('Desk Lah! leave allowance differs from current sealed V1 value.',invalidAllowance);
+      }
+      const local=readLeaveRecords();
+      const localMap=new Map(local.map(item=>[String(item.id),{...item}]));
+      const tombstones=readLeaveTombstones();
+      let added=0,updated=0,removed=0,keptLocal=0;
+      for(const row of (cloudRows||[])){
+        const id=String(row.id);
+        const cloudTime=isoTime(row.updated_at||row.created_at);
+        const localRecord=localMap.get(id);
+        const localTime=localRecord?isoTime(localRecord.updated_at||localRecord.created_at):0;
+        const tombstone=tombstones[id];
+        const tombstoneTime=isoTime(tombstone&&tombstone.deleted_at);
+        if(row.is_deleted===true){
+          if(localRecord && cloudTime>=localTime){localMap.delete(id);removed++;}
+          if(cloudTime>=tombstoneTime) tombstones[id]={...row,id,deleted_at:row.updated_at||new Date().toISOString()};
+          continue;
+        }
+        if(tombstoneTime && tombstoneTime>=cloudTime){keptLocal++;continue;}
+        const normalized={
+          id,
+          leave_date:String(row.leave_date||''),
+          type:String(row.type||''),
+          days:Number(row.days),
+          note:String(row.note||''),
+          created_at:row.created_at||row.updated_at||new Date().toISOString(),
+          updated_at:row.updated_at||row.created_at||new Date().toISOString()
+        };
+        if(!localRecord){
+          localMap.set(id,normalized);
+          if(tombstones[id]) delete tombstones[id];
+          added++;
+        }else if(cloudTime>localTime){
+          localMap.set(id,{...localRecord,...normalized,created_at:row.created_at||localRecord.created_at});
+          if(tombstones[id]) delete tombstones[id];
+          updated++;
+        }else keptLocal++;
+      }
+      writeLeaveRecords([...localMap.values()]);
+      writeLeaveTombstones(tombstones);
+      renderLeaveRecords();
+      setSync('✓ 已同步',true);
+      const changed=added+updated+removed;
+      if(!quiet && changed) demoSave(`假期簿已更新 · 新增 ${added} · 更新 ${updated}${removed?` · 移除 ${removed}`:''}`);
+      console.log('Desk Lah! Leave Cloud → Local auto pull',{reason,added,updated,removed,keptLocal,total:(cloudRows||[]).length});
+      return {added,updated,removed,keptLocal};
+    }catch(error){
+      console.error('Desk Lah! Leave cloud pull failed.',error);
+      setSync('同步失敗 · 重試',false);
+      if(!quiet) demoSave('假期簿同步失敗');
+      return null;
+    }finally{leaveCloudPullInFlight=null;}
+  })();
+  return leaveCloudPullInFlight;
+}
+
+async function saveLeaveRecord(){
+  const dateInput=document.getElementById('leaveDate');
+  const typeInput=document.getElementById('leaveType');
+  const daysInput=document.getElementById('leaveDays');
+  const noteInput=document.getElementById('leaveNote');
+  if(!dateInput.value){demoSave('請選擇日期');dateInput.focus();return;}
+  const rawDays=String(daysInput.value||'').trim();
+  const days=Number(rawDays);
+  if(!rawDays||!Number.isInteger(days)||days<1){demoSave('天數只能填 1、2、3…整天');daysInput.focus();return;}
+  const allowedTypes=['annual_use','replacement_use','replacement_earn'];
+  if(!allowedTypes.includes(typeInput.value)){demoSave('假期類型不正確');return;}
+  const records=readLeaveRecords();
+  const now=new Date().toISOString();
+  let savedRecord=null;
+  const wasEditing=Boolean(currentLeaveRecordId);
+  if(currentLeaveRecordId){
+    const index=records.findIndex(item=>String(item.id)===String(currentLeaveRecordId));
+    if(index<0){demoSave('找不到這筆假期紀錄');returnToLeaveBook();return;}
+    records[index]={...records[index],leave_date:dateInput.value,type:typeInput.value,days,note:noteInput.value.trim(),updated_at:now};
+    savedRecord=records[index];
+  }else{
+    const id=crypto.randomUUID?crypto.randomUUID():`leave-${Date.now()}`;
+    savedRecord={id,leave_date:dateInput.value,type:typeInput.value,days,note:noteInput.value.trim(),created_at:now,updated_at:now};
+    records.push(savedRecord);
+  }
+  clearLocalLeaveTombstone(savedRecord.id);
+  try{writeLeaveRecords(records)}catch(error){console.error('Desk Lah! leave save failed.',error);demoSave('假期紀錄保存失敗');return;}
+  currentLeaveYear=Number(dateInput.value.slice(0,4))||currentLeaveYear;
+  returnToLeaveBook();
+  const synced=await syncLeaveToCloud(savedRecord);
+  demoSave(synced?(wasEditing?'假期紀錄已更新':'假期紀錄已保存'):(wasEditing?'假期紀錄已更新本機 · Cloud 同步失敗':'假期紀錄已保存本機 · Cloud 同步失敗'));
+}
+async function deleteCurrentLeaveRecord(){
+  if(!currentLeaveRecordId) return;
+  if(!confirm('刪除這筆假期紀錄？')) return;
+  const records=readLeaveRecords();
+  const record=records.find(item=>String(item.id)===String(currentLeaveRecordId));
+  if(!record){demoSave('找不到這筆假期紀錄');returnToLeaveBook();return;}
+  const deletedAt=new Date().toISOString();
+  const remaining=records.filter(item=>String(item.id)!==String(currentLeaveRecordId));
+  try{writeLeaveRecords(remaining);markLocalLeaveTombstone(record,deletedAt)}catch(error){console.error('Desk Lah! leave delete failed.',error);demoSave('刪除失敗');return;}
+  currentLeaveRecordId=null;
+  returnToLeaveBook();
+  const synced=await syncLeaveDeletionToCloud(record,deletedAt);
+  demoSave(synced?'假期紀錄已刪除':'假期紀錄已刪除本機 · Cloud 同步失敗');
+}
+
+function readDrafts(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY)||'[]');
+    return Array.isArray(parsed)?parsed:[];
+  }catch(error){
+    console.warn('Desk Lah! drafts could not be read.',error);
+    return [];
+  }
+}
+function writeDrafts(drafts){localStorage.setItem(DRAFT_STORAGE_KEY,JSON.stringify(drafts))}
+function readDraftTombstones(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(DRAFT_TOMBSTONE_KEY)||'{}');
+    return parsed && typeof parsed==='object' && !Array.isArray(parsed)?parsed:{};
+  }catch(error){
+    console.warn('Desk Lah! tombstones could not be read.',error);
+    return {};
+  }
+}
+function writeDraftTombstones(tombstones){localStorage.setItem(DRAFT_TOMBSTONE_KEY,JSON.stringify(tombstones||{}))}
+function markLocalDraftTombstone(id,updatedAt=new Date().toISOString()){
+  const tombstones=readDraftTombstones();
+  tombstones[String(id)]=updatedAt;
+  writeDraftTombstones(tombstones);
+}
+function clearLocalDraftTombstone(id){
+  const tombstones=readDraftTombstones();
+  if(Object.prototype.hasOwnProperty.call(tombstones,String(id))){delete tombstones[String(id)];writeDraftTombstones(tombstones)}
+}
+function readPhotoTombstones(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(PHOTO_TOMBSTONE_KEY)||'{}');
+    return parsed && typeof parsed==='object' && !Array.isArray(parsed)?parsed:{};
+  }catch(error){
+    console.warn('Desk Lah! photo tombstones could not be read.',error);
+    return {};
+  }
+}
+function writePhotoTombstones(tombstones){localStorage.setItem(PHOTO_TOMBSTONE_KEY,JSON.stringify(tombstones||{}))}
+function markLocalPhotoTombstone(photo,deletedAt=new Date().toISOString()){
+  if(!photo||!photo.id) return;
+  const tombstones=readPhotoTombstones();
+  tombstones[String(photo.id)]={
+    id:String(photo.id),
+    draft_id:String(photo.draft_id||''),
+    storage_key:String(photo.cloud_storage_key||''),
+    deleted_at:deletedAt
+  };
+  writePhotoTombstones(tombstones);
+}
+function clearLocalPhotoTombstone(photoId){
+  const tombstones=readPhotoTombstones();
+  if(Object.prototype.hasOwnProperty.call(tombstones,String(photoId))){delete tombstones[String(photoId)];writePhotoTombstones(tombstones)}
+}
+function isoTime(value){
+  const time=new Date(value||0).getTime();
+  return Number.isFinite(time)?time:0;
+}
+function formatDraftDate(iso){
+  const d=new Date(iso);
+  if(Number.isNaN(d.getTime())) return '';
+  return new Intl.DateTimeFormat('en-GB',{month:'2-digit',day:'2-digit'}).format(d);
+}
+function renderDrafts(){
+  const list=document.getElementById('draftList');
+  const empty=document.getElementById('draftEmpty');
+  const drafts=readDrafts().sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at));
+  list.innerHTML='';
+  drafts.forEach(draft=>{
+    const row=document.createElement('div'); row.className='item draft-row';
+    const text=document.createElement('div');
+    const title=document.createElement('h3'); title.textContent=draft.title;
+    const meta=document.createElement('div'); meta.className='meta';
+    const date=formatDraftDate(draft.created_at);
+    const photoCount=Number(draft.photo_count||0);
+    meta.textContent=photoCount>0?`${date} · ${photoCount} 張原圖`:date;
+    const arrow=document.createElement('div'); arrow.textContent='›';
+    text.append(title,meta); row.append(text,arrow);
+    row.addEventListener('click',()=>openDraft(draft.id));
+    list.append(row);
+  });
+  empty.style.display=drafts.length?'none':'block';
+  list.style.display=drafts.length?'block':'none';
+}
+
+function openPhotoDb(){
+  return new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)){reject(new Error('IndexedDB unavailable'));return;}
+    const request=indexedDB.open(PHOTO_DB_NAME,PHOTO_DB_VERSION);
+    request.onupgradeneeded=()=>{
+      const db=request.result;
+      if(!db.objectStoreNames.contains(PHOTO_STORE)){
+        const store=db.createObjectStore(PHOTO_STORE,{keyPath:'id'});
+        store.createIndex('draft_id','draft_id',{unique:false});
+      }
+    };
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error||new Error('IndexedDB open failed'));
+  });
+}
+function savePhotosForDraft(draftId,items){
+  if(!items.length) return Promise.resolve();
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    const store=tx.objectStore(PHOTO_STORE);
+    const createdAt=new Date().toISOString();
+    items.forEach((item,index)=>{
+      store.put({
+        id:item.id,
+        draft_id:draftId,
+        blob:item.file,
+        original_name:item.file.name||`photo-${index+1}`,
+        mime_type:item.file.type||'application/octet-stream',
+        size_bytes:item.file.size||0,
+        sort_order:index,
+        created_at:createdAt
+      });
+    });
+    tx.oncomplete=()=>{db.close();resolve()};
+    tx.onerror=()=>{const err=tx.error||new Error('Photo save failed');db.close();reject(err)};
+    tx.onabort=()=>{const err=tx.error||new Error('Photo save aborted');db.close();reject(err)};
+  }));
+}
+function getPhotosForDraft(draftId){
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readonly');
+    const store=tx.objectStore(PHOTO_STORE);
+    const index=store.index('draft_id');
+    const req=index.getAll(draftId);
+    req.onsuccess=()=>{
+      const rows=(req.result||[]).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
+      db.close(); resolve(rows);
+    };
+    req.onerror=()=>{const err=req.error||new Error('Photo read failed');db.close();reject(err)};
+  }));
+}
+function getPhotoById(photoId){
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readonly');
+    const req=tx.objectStore(PHOTO_STORE).get(String(photoId));
+    req.onsuccess=()=>{const row=req.result||null;db.close();resolve(row)};
+    req.onerror=()=>{const err=req.error||new Error('Photo read failed');db.close();reject(err)};
+  }));
+}
+function saveAdditionalPhotosForDraft(draftId,files){
+  if(!files.length) return Promise.resolve([]);
+  return getPhotosForDraft(draftId).then(existing=>{
+    const startOrder=existing.reduce((max,row)=>Math.max(max,Number(row.sort_order)||0),-1)+1;
+    const items=files.map((file,index)=>({
+      id:(crypto.randomUUID?crypto.randomUUID():`photo-${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`),
+      file,
+      sort_order:startOrder+index
+    }));
+    return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+      const tx=db.transaction(PHOTO_STORE,'readwrite');
+      const store=tx.objectStore(PHOTO_STORE);
+      const createdAt=new Date().toISOString();
+      items.forEach(item=>store.put({
+        id:item.id,
+        draft_id:draftId,
+        blob:item.file,
+        original_name:item.file.name||'photo',
+        mime_type:item.file.type||'application/octet-stream',
+        size_bytes:item.file.size||0,
+        sort_order:item.sort_order,
+        created_at:createdAt
+      }));
+      tx.oncomplete=()=>{db.close();resolve(items)};
+      tx.onerror=()=>{const err=tx.error||new Error('Photo add failed');db.close();reject(err)};
+      tx.onabort=()=>{const err=tx.error||new Error('Photo add aborted');db.close();reject(err)};
+    }));
+  });
+}
+function deletePhotoById(photoId){
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    tx.objectStore(PHOTO_STORE).delete(photoId);
+    tx.oncomplete=()=>{db.close();resolve()};
+    tx.onerror=()=>{const err=tx.error||new Error('Photo delete failed');db.close();reject(err)};
+    tx.onabort=()=>{const err=tx.error||new Error('Photo delete aborted');db.close();reject(err)};
+  }));
+}
+function updateDraftPhotoCount(draftId,count){
+  const drafts=readDrafts();
+  const index=drafts.findIndex(item=>item.id===draftId);
+  if(index===-1) return;
+  drafts[index]={...drafts[index],photo_count:count,updated_at:new Date().toISOString()};
+  writeDrafts(drafts);
+}
+
+function deletePhotosForDraft(draftId){
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    const store=tx.objectStore(PHOTO_STORE);
+    const index=store.index('draft_id');
+    const req=index.openCursor(IDBKeyRange.only(draftId));
+    req.onsuccess=()=>{
+      const cursor=req.result;
+      if(cursor){cursor.delete();cursor.continue();}
+    };
+    req.onerror=()=>{try{tx.abort()}catch(_){};};
+    tx.oncomplete=()=>{db.close();resolve()};
+    tx.onerror=()=>{const err=tx.error||new Error('Photo delete failed');db.close();reject(err)};
+    tx.onabort=()=>{const err=tx.error||new Error('Photo delete aborted');db.close();reject(err)};
+  }));
+}
+
+function clearDetailPhotoUrls(){
+  detailPhotoUrls.forEach(url=>URL.revokeObjectURL(url));
+  detailPhotoUrls=[];
+}
+async function renderDetailPhotos(draftId){
+  clearDetailPhotoUrls();
+  const grid=document.getElementById('detailPhotos');
+  const empty=document.getElementById('detailPhotoEmpty');
+  const meta=document.getElementById('detailPhotoMeta');
+  grid.innerHTML=''; meta.textContent=''; empty.textContent='暫時沒有原圖。'; empty.style.display='block';
+  try{
+    const photos=await getPhotosForDraft(draftId);
+    if(currentDraftId!==draftId) return;
+    photos.forEach(photo=>{
+      const url=URL.createObjectURL(photo.blob); detailPhotoUrls.push(url);
+      const box=document.createElement('div'); box.className='detail-photo';
+      const img=document.createElement('img'); img.src=url; img.alt=photo.original_name||'原圖';
+      img.addEventListener('click',()=>openDetailPhoto(url,photo.original_name||'原圖'));
+      const remove=document.createElement('button'); remove.type='button'; remove.className='detail-photo-remove'; remove.textContent='×';
+      remove.setAttribute('aria-label',`刪除 ${photo.original_name||'這張原圖'}`);
+      remove.addEventListener('click',event=>{event.stopPropagation();removeDetailPhoto(photo.id,photo.original_name||'這張原圖')});
+      box.append(img,remove); grid.append(box);
+    });
+    empty.style.display=photos.length?'none':'block';
+    meta.textContent=photos.length?`${photos.length} 張 · 原始檔案保存在本機 IndexedDB`:'0 張原圖';
+  }catch(error){
+    console.error('Desk Lah! photo read failed.',error);
+    empty.textContent='原圖讀取失敗。';
+    meta.textContent='';
+  }
+}
+function openDetailPhoto(url,name){
+  const img=document.getElementById('modalPhoto');
+  img.src=url; img.alt=name||'原圖預覽';
+  document.getElementById('modal').classList.add('show');
+}
+function closePhoto(event,force=false){
+  if(force||event.target.id==='modal'){
+    document.getElementById('modal').classList.remove('show');
+    document.getElementById('modalPhoto').removeAttribute('src');
+  }
+}
+async function removeDetailPhoto(photoId,name){
+  if(!currentDraftId) return;
+  const ok=window.confirm(`確定刪除「${name}」？`);
+  if(!ok) return;
+  const draftId=currentDraftId;
+  const deletedAt=new Date().toISOString();
+  try{
+    const photo=await getPhotoById(photoId);
+    if(!photo){demoSave('找不到這張原圖');return;}
+    markLocalPhotoTombstone(photo,deletedAt);
+    await deletePhotoById(photoId);
+    const remaining=await getPhotosForDraft(draftId);
+    updateDraftPhotoCount(draftId,remaining.length);
+    renderDrafts();
+    await renderDetailPhotos(draftId);
+    const dateDraft=readDrafts().find(item=>item.id===draftId);
+    if(dateDraft) document.getElementById('detailMeta').textContent=remaining.length?`${formatDraftDate(dateDraft.created_at)} · ${remaining.length} 張原圖`:formatDraftDate(dateDraft.created_at);
+
+    const synced=await syncPhotoDeletionToCloud(photo,deletedAt,{quiet:true});
+    demoSave(synced?'已刪除這張原圖 · Cloud 已同步':'已刪除本機原圖 · Cloud 刪除同步失敗');
+  }catch(error){
+    console.error('Desk Lah! single photo delete failed.',error);
+    setSync('同步失敗 · 重試',false);
+    demoSave('原圖刪除失敗');
+  }
+}
+
+async function handleDetailPhotoSelection(event){
+  if(!currentDraftId){event.target.value='';return;}
+  const draftId=currentDraftId;
+  const files=[...(event.target.files||[])].filter(file=>file.type.startsWith('image/'));
+  event.target.value='';
+  if(!files.length) return;
+  try{
+    const addedItems=await saveAdditionalPhotosForDraft(draftId,files);
+    const all=await getPhotosForDraft(draftId);
+    updateDraftPhotoCount(draftId,all.length);
+    renderDrafts();
+    await renderDetailPhotos(draftId);
+    const dateDraft=readDrafts().find(item=>item.id===draftId);
+    if(dateDraft) document.getElementById('detailMeta').textContent=`${formatDraftDate(dateDraft.created_at)} · ${all.length} 張原圖`;
+
+    // Keep desk_drafts updated_at aligned with the photo addition before uploading metadata.
+    const updatedDraft=readDrafts().find(item=>item.id===draftId);
+    const textSynced=updatedDraft?await syncDraftToCloud(updatedDraft):false;
+    const photoResult=textSynced?await syncOriginalPhotosToCloud(draftId,{photoIds:addedItems.map(item=>item.id),quiet:true}):null;
+    if(textSynced && photoResult){
+      demoSave(`已補加 ${files.length} 張原圖 · Cloud 已同步`);
+    }else{
+      demoSave(`已補加 ${files.length} 張原圖到本機 · Cloud 同步失敗`);
+    }
+  }catch(error){
+    console.error('Desk Lah! additional photo save failed.',error);
+    demoSave('原圖保存失敗');
+  }
+}
+
+
+function sanitizeDownloadName(name){
+  const cleaned=(name||'Desk-Lah').replace(/[\\/:*?"<>|\u0000-\u001F]/g,' ').replace(/\s+/g,' ').trim();
+  return cleaned||'Desk-Lah';
+}
+function uniqueZipName(name,used){
+  let safe=(name||'photo').replace(/[\\/]/g,'_').replace(/[\u0000-\u001F]/g,'').trim()||'photo';
+  if(!used.has(safe)){used.add(safe);return safe;}
+  const dot=safe.lastIndexOf('.');
+  const base=dot>0?safe.slice(0,dot):safe;
+  const ext=dot>0?safe.slice(dot):'';
+  let n=2,candidate;
+  do{candidate=`${base} (${n++})${ext}`;}while(used.has(candidate));
+  used.add(candidate);
+  return candidate;
+}
+const CRC32_TABLE=(()=>{
+  const table=new Uint32Array(256);
+  for(let n=0;n<256;n++){
+    let c=n;
+    for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);
+    table[n]=c>>>0;
+  }
+  return table;
+})();
+function crc32(bytes){
+  let c=0xFFFFFFFF;
+  for(const b of bytes)c=CRC32_TABLE[(c^b)&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0;
+}
+function dosDateTime(date=new Date()){
+  let year=Math.max(1980,date.getFullYear());
+  const dosTime=(date.getHours()<<11)|(date.getMinutes()<<5)|(Math.floor(date.getSeconds()/2));
+  const dosDate=((year-1980)<<9)|((date.getMonth()+1)<<5)|date.getDate();
+  return {dosTime,dosDate};
+}
+function makeBytes(size,writer){
+  const bytes=new Uint8Array(size);
+  writer(new DataView(bytes.buffer));
+  return bytes;
+}
+function concatBytes(parts){
+  const total=parts.reduce((sum,p)=>sum+p.length,0);
+  const out=new Uint8Array(total);
+  let offset=0;
+  for(const part of parts){out.set(part,offset);offset+=part.length;}
+  return out;
+}
+async function buildStoredZip(photos){
+  const encoder=new TextEncoder();
+  const localParts=[];
+  const centralParts=[];
+  const usedNames=new Set();
+  let localOffset=0;
+  for(const photo of photos){
+    const data=new Uint8Array(await photo.blob.arrayBuffer());
+    const name=uniqueZipName(photo.original_name||'photo',usedNames);
+    const nameBytes=encoder.encode(name);
+    const crc=crc32(data);
+    const {dosTime,dosDate}=dosDateTime(photo.created_at?new Date(photo.created_at):new Date());
+    const localHeader=makeBytes(30,view=>{
+      view.setUint32(0,0x04034b50,true);
+      view.setUint16(4,20,true);
+      view.setUint16(6,0x0800,true);
+      view.setUint16(8,0,true);
+      view.setUint16(10,dosTime,true);
+      view.setUint16(12,dosDate,true);
+      view.setUint32(14,crc,true);
+      view.setUint32(18,data.length,true);
+      view.setUint32(22,data.length,true);
+      view.setUint16(26,nameBytes.length,true);
+      view.setUint16(28,0,true);
+    });
+    localParts.push(localHeader,nameBytes,data);
+    const centralHeader=makeBytes(46,view=>{
+      view.setUint32(0,0x02014b50,true);
+      view.setUint16(4,20,true);
+      view.setUint16(6,20,true);
+      view.setUint16(8,0x0800,true);
+      view.setUint16(10,0,true);
+      view.setUint16(12,dosTime,true);
+      view.setUint16(14,dosDate,true);
+      view.setUint32(16,crc,true);
+      view.setUint32(20,data.length,true);
+      view.setUint32(24,data.length,true);
+      view.setUint16(28,nameBytes.length,true);
+      view.setUint16(30,0,true);
+      view.setUint16(32,0,true);
+      view.setUint16(34,0,true);
+      view.setUint16(36,0,true);
+      view.setUint32(38,0,true);
+      view.setUint32(42,localOffset,true);
+    });
+    centralParts.push(centralHeader,nameBytes);
+    localOffset+=localHeader.length+nameBytes.length+data.length;
+  }
+  const central=concatBytes(centralParts);
+  const end=makeBytes(22,view=>{
+    view.setUint32(0,0x06054b50,true);
+    view.setUint16(4,0,true);
+    view.setUint16(6,0,true);
+    view.setUint16(8,photos.length,true);
+    view.setUint16(10,photos.length,true);
+    view.setUint32(12,central.length,true);
+    view.setUint32(16,localOffset,true);
+    view.setUint16(20,0,true);
+  });
+  return concatBytes([...localParts,central,end]);
+}
+async function downloadAllOriginalPhotos(){
+  if(!currentDraftId){demoSave('找不到這份稿件');return;}
+  const draft=readDrafts().find(item=>item.id===currentDraftId);
+  if(!draft){demoSave('找不到這份稿件');return;}
+  try{
+    const photos=await getPhotosForDraft(currentDraftId);
+    if(!photos.length){demoSave('這份稿件沒有原圖');return;}
+    demoSave('正在整理原圖…');
+    const zipBytes=await buildStoredZip(photos);
+    const blob=new Blob([zipBytes],{type:'application/zip'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`${sanitizeDownloadName(draft.title)}-原圖.zip`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    demoSave(`已下載 ${photos.length} 張原圖`);
+  }catch(error){
+    console.error('Desk Lah! download all originals failed.',error);
+    demoSave('原圖下載失敗');
+  }
+}
+
+async function openDraft(id){
+  const draft=readDrafts().find(item=>item.id===id);
+  if(!draft){demoSave('找不到這份稿件');renderDrafts();return;}
+  currentDraftId=draft.id;
+  resetConversionUndo();
+  document.getElementById('detailTitleInput').value=draft.title;
+  const photoCount=Number(draft.photo_count||0);
+  document.getElementById('detailMeta').textContent=photoCount>0?`${formatDraftDate(draft.created_at)} · ${photoCount} 張原圖`:formatDraftDate(draft.created_at);
+  document.getElementById('draftText').value=draft.body||'';
+  showPage('detail');
+  await renderDetailPhotos(draft.id);
+}
+function resetConversionUndo(){
+  conversionUndoText=null;
+  const undo=document.getElementById('undoConversionBtn');
+  if(undo) undo.style.display='none';
+}
+function convertDraftTextToTraditional(){
+  const editor=document.getElementById('draftText');
+  const before=editor.value;
+  const after=[...before].map(char=>SIMP_TO_TRAD[char]||char).join('');
+  if(after===before){demoSave('沒有需要轉換的簡體字');return;}
+  if(conversionUndoText===null) conversionUndoText=before;
+  editor.value=after;
+  document.getElementById('undoConversionBtn').style.display='inline';
+  demoSave('已轉為繁體 · 尚未保存');
+}
+function undoDraftTextConversion(){
+  if(conversionUndoText===null){return;}
+  document.getElementById('draftText').value=conversionUndoText;
+  resetConversionUndo();
+  demoSave('已撤銷本次轉換');
+}
+async function copyDraftText(){
+  const text=document.getElementById('draftText').value;
+  if(!text){demoSave('沒有文字可複製');return;}
+  try{
+    if(navigator.clipboard && typeof navigator.clipboard.writeText==='function'){
+      await navigator.clipboard.writeText(text);
+    }else{
+      throw new Error('Clipboard API unavailable');
+    }
+    demoSave('文字已複製');
+    return;
+  }catch(error){
+    const helper=document.createElement('textarea');
+    helper.value=text;
+    helper.setAttribute('readonly','');
+    helper.style.position='fixed';
+    helper.style.opacity='0';
+    helper.style.pointerEvents='none';
+    helper.style.left='-9999px';
+    document.body.appendChild(helper);
+    helper.focus();
+    helper.select();
+    let copied=false;
+    try{copied=document.execCommand('copy');}catch(_){}
+    helper.remove();
+    demoSave(copied?'文字已複製':'複製失敗');
+  }
+}
+
+function safeStorageFilename(name){
+  const raw=String(name||'photo').normalize('NFKC');
+  const cleaned=raw.replace(/[\\/\u0000-\u001F\u007F]/g,'_').replace(/\s+/g,' ').trim();
+  return (cleaned||'photo').slice(0,160);
+}
+
+let lastPhotoCloudDiagnostic=null;
+function rememberPhotoCloudDiagnostic(stage,error,{photo=null,path='',draftId=''}={}){
+  const raw=error||{};
+  const parts=[];
+  const status=raw.statusCode??raw.status??raw.status_code;
+  const code=raw.code??raw.error;
+  if(status!==undefined && status!==null && String(status)) parts.push(`status=${status}`);
+  if(code!==undefined && code!==null && String(code)) parts.push(`code=${code}`);
+  const message=String(raw.message||raw.error_description||raw.error||raw||'Unknown error');
+  lastPhotoCloudDiagnostic={
+    stage:String(stage||'unknown'),
+    message,
+    extra:parts.join(' · '),
+    photoName:photo?String(photo.original_name||'photo'):'',
+    photoId:photo?String(photo.id||''):'',
+    draftId:String(draftId||''),
+    path:String(path||''),
+    blobType:photo&&photo.blob?String(photo.blob.type||photo.mime_type||''):'',
+    blobSize:photo&&photo.blob?Number(photo.blob.size||photo.size_bytes||0):0,
+    at:new Date().toISOString()
+  };
+  console.error('Desk Lah! photo Cloud diagnostic',lastPhotoCloudDiagnostic,error);
+  try{localStorage.setItem('desk_lah_last_photo_cloud_diagnostic',JSON.stringify(lastPhotoCloudDiagnostic))}catch(_){}
+  return lastPhotoCloudDiagnostic;
+}
+function photoCloudDiagnosticText(){
+  const d=lastPhotoCloudDiagnostic;
+  if(!d) return '沒有取得詳細錯誤。';
+  const lines=[
+    `階段：${d.stage}`,
+    `錯誤：${d.message}${d.extra?` (${d.extra})`:''}`,
+    d.photoName?`檔案：${d.photoName}`:'',
+    d.blobSize?`大小：${d.blobSize} bytes`:'',
+    d.blobType?`類型：${d.blobType}`:'',
+    d.path?`Path：${d.path}`:''
+  ].filter(Boolean);
+  return lines.join('\n');
+}
+async function upsertPhotoMetadataToCloud(photo,path,userId,draftId){
+  const now=new Date().toISOString();
+  const row={
+    id:String(photo.id),
+    draft_id:String(draftId),
+    user_id:userId,
+    storage_key:path,
+    original_name:String(photo.original_name||'photo'),
+    mime_type:String(photo.mime_type||photo.blob.type||'application/octet-stream'),
+    size_bytes:Number(photo.size_bytes||photo.blob.size||0),
+    sort_order:Number(photo.sort_order||0),
+    created_at:photo.created_at||now,
+    updated_at:now,
+    is_deleted:false
+  };
+  const {data,error}=await deskSupabase.from('draft_photos').upsert(row,{onConflict:'id'}).select('id,draft_id,storage_key,original_name,mime_type,size_bytes,sort_order,is_deleted').single();
+  if(error) throw error;
+  return data;
+}
+
+async function photoUploadBodyFromIndexedDb(photo){
+  const blob=photo&&photo.blob;
+  if(!(blob instanceof Blob)) throw new Error('IndexedDB 原圖不是有效 Blob');
+  if(!Number(blob.size||0)) throw new Error('IndexedDB 原圖內容為空');
+  const buffer=await blob.arrayBuffer();
+  if(!buffer || !Number(buffer.byteLength||0)) throw new Error('IndexedDB 原圖轉換後內容為空');
+  // iOS/Safari can intermittently send an IndexedDB Blob through FormData as an empty body.
+  // ArrayBuffer uses Supabase Storage's binary upload path instead of the Blob/FormData path.
+  return buffer;
+}
+
+function markLocalPhotoCloudKey(photoId,path){
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    const store=tx.objectStore(PHOTO_STORE);
+    const req=store.get(String(photoId));
+    req.onsuccess=()=>{
+      const row=req.result;
+      if(row) store.put({...row,cloud_storage_key:String(path),updated_at:new Date().toISOString()});
+    };
+    req.onerror=()=>{try{tx.abort()}catch(_){}};
+    tx.oncomplete=()=>{db.close();resolve()};
+    tx.onerror=()=>{const err=tx.error||new Error('Photo cloud key save failed');db.close();reject(err)};
+    tx.onabort=()=>{const err=tx.error||new Error('Photo cloud key save aborted');db.close();reject(err)};
+  }));
+}
+
+let photoUploadInFlight=null;
+async function syncOriginalPhotosToCloud(draftId,{photoIds=null,quiet=false}={}){
+  if(!draftId) return null;
+  // Keep one photo-upload batch at a time so the same save action cannot race itself.
+  while(photoUploadInFlight){try{await photoUploadInFlight}catch(_){} }
+  photoUploadInFlight=(async()=>{
+    try{
+      if(!deskSupabase) createDeskSupabase();
+      const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+      if(userError) throw userError;
+      const user=userData&&userData.user;
+      if(!user){setSync('需要登入',false);return null;}
+      const storageReady=await checkDeskStorageBucket({openGateOnFail:true});
+      if(!storageReady) return null;
+      const photoTableReady=await checkDeskPhotoTable({openGateOnFail:true});
+      if(!photoTableReady) return null;
+
+      const allPhotos=await getPhotosForDraft(String(draftId));
+      const wanted=photoIds?new Set(photoIds.map(String)):null;
+      const photos=wanted?allPhotos.filter(photo=>wanted.has(String(photo.id))):allPhotos;
+      if(!photos.length) return {uploaded:0,total:0};
+
+      setSync('同步中…',true);
+      let uploaded=0;
+      for(const photo of photos){
+        const filename=safeStorageFilename(photo.original_name||'photo');
+        const path=`${user.id}/${draftId}/${photo.id}-${filename}`;
+        const uploadBody=await photoUploadBodyFromIndexedDb(photo);
+        const {error}=await deskSupabase.storage
+          .from(DESK_ORIGINALS_BUCKET)
+          .upload(path,uploadBody,{contentType:photo.mime_type||photo.blob.type||'application/octet-stream',upsert:false,cacheControl:'3600'});
+        if(error){
+          const message=String(error.message||'');
+          if(!/already exists|duplicate/i.test(message)) throw error;
+        }
+        await upsertPhotoMetadataToCloud(photo,path,user.id,draftId);
+        try{await markLocalPhotoCloudKey(photo.id,path)}catch(error){console.warn('Desk Lah! local cloud key marker skipped.',error)}
+        uploaded++;
+      }
+      setSync('✓ 已同步',true);
+      if(!quiet) demoSave(`已同步 ${uploaded} 張原圖`);
+      console.log('Desk Lah! original photo auto upload',{draftId,uploaded,total:photos.length});
+      return {uploaded,total:photos.length};
+    }catch(error){
+      console.error('Desk Lah! original photo auto upload failed.',error);
+      if(/draft_photos|relation .* does not exist|schema cache/i.test(String(error&&error.message||''))){
+        setSync('同步失敗 · 重試',false);
+        showCloudStep('photoTable');
+        const box=document.getElementById('cloudPhotoSqlText'); if(box) box.value=DESK_PHOTOS_SQL;
+        setCloudMessage('draft_photos 尚未建立。請先 Run Metadata SQL。');
+        showCloudGate();
+      }else{
+        setSync('同步失敗 · 重試',false);
+        if(!quiet) demoSave(error&&error.message?`原圖同步失敗：${error.message}`:'原圖同步失敗');
+      }
+      return null;
+    }finally{
+      photoUploadInFlight=null;
+    }
+  })();
+  return photoUploadInFlight;
+}
+
+async function syncPhotoDeletionToCloud(photo,deletedAt=new Date().toISOString(),{quiet=false}={}){
+  if(!photo||!photo.id) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){setSync('需要登入',false);return false;}
+
+    setSync('同步中…',true);
+    const {data,error}=await deskSupabase
+      .from('draft_photos')
+      .update({is_deleted:true,updated_at:deletedAt})
+      .eq('id',String(photo.id))
+      .eq('user_id',user.id)
+      .select('id,is_deleted,updated_at');
+    if(error) throw error;
+
+    // No metadata row means this photo was never available to another device, so local delete is already sufficient.
+    if(!data||!data.length){
+      clearLocalPhotoTombstone(photo.id);
+      setSync('✓ 已同步',true);
+      if(!quiet) demoSave('原圖已刪除');
+      return true;
+    }
+
+    clearLocalPhotoTombstone(photo.id);
+    setSync('✓ 已同步',true);
+    if(!quiet) demoSave('已刪除這張原圖');
+    console.log('Desk Lah! photo delete tombstone',{photoId:photo.id,draftId:photo.draft_id});
+    return true;
+  }catch(error){
+    console.error('Desk Lah! photo delete sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    if(!quiet) demoSave(error&&error.message?`原圖刪除同步失敗：${error.message}`:'原圖刪除同步失敗');
+    return false;
+  }
+}
+
+async function getCloudPhotoRowsForDraft(draftId,userId){
+  const {data,error}=await deskSupabase
+    .from('draft_photos')
+    .select('id,storage_key')
+    .eq('draft_id',String(draftId))
+    .eq('user_id',userId)
+    .eq('is_deleted',false);
+  if(error) throw error;
+  return data||[];
+}
+
+async function reconcileLocalPhotosToCloud(draftId,{quiet=true}={}){
+  // Cloud is the authority for cross-device availability. Do not trust a stale
+  // local cloud_storage_key by itself: verify that every local photo has a live
+  // draft_photos row, then repair any missing Cloud object / metadata pair.
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user) return {pending:0,uploaded:0,failed:0,error:'not-authenticated'};
+
+    const storageReady=await checkDeskStorageBucket({openGateOnFail:true});
+    if(!storageReady) return {pending:0,uploaded:0,failed:0,error:'storage-not-ready'};
+    const photoTableReady=await checkDeskPhotoTable({openGateOnFail:true});
+    if(!photoTableReady) return {pending:0,uploaded:0,failed:0,error:'photo-table-not-ready'};
+
+    const localPhotos=await getPhotosForDraft(String(draftId));
+    if(!localPhotos.length) return {pending:0,uploaded:0,failed:0};
+
+    const cloudRows=await getCloudPhotoRowsForDraft(String(draftId),user.id);
+    const cloudById=new Map(cloudRows.map(row=>[String(row.id),row]));
+    let pending=0,uploaded=0,failed=0;
+
+    for(const photo of localPhotos){
+      const existing=cloudById.get(String(photo.id));
+      if(existing){
+        if(String(photo.cloud_storage_key||'')!==String(existing.storage_key||'')){
+          try{await markLocalPhotoCloudKey(photo.id,existing.storage_key)}catch(error){console.warn('Desk Lah! local Cloud key refresh skipped.',error)}
+        }
+        continue;
+      }
+
+      pending++;
+      const filename=safeStorageFilename(photo.original_name||'photo');
+      const path=`${user.id}/${draftId}/${photo.id}-${filename}`;
+      try{
+        const uploadBody=await photoUploadBodyFromIndexedDb(photo);
+        const {error:uploadError}=await deskSupabase.storage
+          .from(DESK_ORIGINALS_BUCKET)
+          .upload(path,uploadBody,{contentType:photo.mime_type||photo.blob.type||'application/octet-stream',upsert:false,cacheControl:'3600'});
+        if(uploadError){
+          const message=String(uploadError.message||'');
+          if(!/already exists|duplicate/i.test(message)){
+            rememberPhotoCloudDiagnostic('Storage Upload',uploadError,{photo,path,draftId});
+            throw uploadError;
+          }
+        }
+        try{
+          await upsertPhotoMetadataToCloud(photo,path,user.id,draftId);
+        }catch(metadataError){
+          rememberPhotoCloudDiagnostic('draft_photos metadata',metadataError,{photo,path,draftId});
+          throw metadataError;
+        }
+        try{await markLocalPhotoCloudKey(photo.id,path)}catch(error){console.warn('Desk Lah! local Cloud key marker skipped.',error)}
+        uploaded++;
+      }catch(error){
+        failed++;
+        if(!lastPhotoCloudDiagnostic || lastPhotoCloudDiagnostic.photoId!==String(photo.id)){
+          rememberPhotoCloudDiagnostic('Photo reconciliation',error,{photo,path,draftId});
+        }
+        console.error('Desk Lah! Cloud photo reconciliation failed.',{draftId,photoId:photo.id,error});
+      }
+    }
+
+    if(failed){
+      setSync('同步失敗 · 重試',false);
+      if(!quiet) demoSave(`原圖 Cloud 修復：${uploaded} 張成功 · ${failed} 張失敗`);
+    }else if(pending){
+      setSync('✓ 已同步',true);
+      if(!quiet) demoSave(`原圖 Cloud 已補同步 ${uploaded} 張`);
+    }
+    return {pending,uploaded,failed};
+  }catch(error){
+    console.error('Desk Lah! Cloud photo reconciliation failed.',error);
+    setSync('同步失敗 · 重試',false);
+    if(!quiet) demoSave(error&&error.message?`原圖 Cloud 修復失敗：${error.message}`:'原圖 Cloud 修復失敗');
+    return {pending:0,uploaded:0,failed:1,error:String(error&&error.message||error||'unknown')};
+  }
+}
+
+async function retryPendingPhotoUploads({draftId=null,quiet=true}={}){
+  const drafts=readDrafts().filter(draft=>!draftId || String(draft.id)===String(draftId));
+  let pending=0,uploaded=0,failed=0;
+  for(const draft of drafts){
+    const result=await reconcileLocalPhotosToCloud(String(draft.id),{quiet:true});
+    pending+=Number(result&&result.pending||0);
+    uploaded+=Number(result&&result.uploaded||0);
+    failed+=Number(result&&result.failed||0);
+  }
+  if(!quiet && pending){
+    demoSave(failed?`原圖 Cloud 修復：${uploaded} 張成功 · ${failed} 張失敗`:`原圖 Cloud 已補同步 ${uploaded} 張`);
+  }
+  return {pending,uploaded,failed};
+}
+
+async function retryPendingPhotoDeletions(){
+  const tombstones=readPhotoTombstones();
+  const entries=Object.values(tombstones||{});
+  if(!entries.length) return {retried:0,synced:0};
+  let synced=0;
+  for(const item of entries){
+    const ok=await syncPhotoDeletionToCloud({id:item.id,draft_id:item.draft_id,cloud_storage_key:item.storage_key},item.deleted_at,{quiet:true});
+    if(ok) synced++;
+  }
+  return {retried:entries.length,synced};
+}
+
+function putCloudPhotoIntoLocalStore(row,blob){
+  return openPhotoDb().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    tx.objectStore(PHOTO_STORE).put({
+      id:String(row.id),
+      draft_id:String(row.draft_id),
+      blob,
+      original_name:String(row.original_name||'photo'),
+      mime_type:String(row.mime_type||blob.type||'application/octet-stream'),
+      size_bytes:Number(row.size_bytes||blob.size||0),
+      sort_order:Number(row.sort_order||0),
+      created_at:row.created_at||new Date().toISOString(),
+      updated_at:row.updated_at||row.created_at||new Date().toISOString(),
+      cloud_storage_key:String(row.storage_key||'')
+    });
+    tx.oncomplete=()=>{db.close();resolve()};
+    tx.onerror=()=>{const err=tx.error||new Error('Cloud photo local save failed');db.close();reject(err)};
+    tx.onabort=()=>{const err=tx.error||new Error('Cloud photo local save aborted');db.close();reject(err)};
+  }));
+}
+
+let cloudPhotoPullInFlight=null;
+async function pullOriginalPhotosFromCloud({quiet=false,reason='manual'}={}){
+  if(cloudPhotoPullInFlight) return cloudPhotoPullInFlight;
+  cloudPhotoPullInFlight=(async()=>{
+    try{
+      if(!deskSupabase) createDeskSupabase();
+      const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+      if(userError) throw userError;
+      const user=userData&&userData.user;
+      if(!user) return null;
+
+      // Cloud sync must read active rows AND tombstones so a second device can remove deleted photos.
+      const {data:rows,error}=await deskSupabase
+        .from('draft_photos')
+        .select('id,draft_id,storage_key,original_name,mime_type,size_bytes,sort_order,created_at,updated_at,is_deleted')
+        .order('sort_order',{ascending:true});
+      if(error) throw error;
+
+      const drafts=readDrafts();
+      const draftIds=new Set(drafts.map(d=>String(d.id)));
+      const byDraft=new Map();
+      for(const row of (rows||[])){
+        const draftId=String(row.draft_id);
+        if(!draftIds.has(draftId)) continue;
+        if(!byDraft.has(draftId)) byDraft.set(draftId,[]);
+        byDraft.get(draftId).push(row);
+      }
+
+      const localTombstones=readPhotoTombstones();
+      let downloaded=0,deleted=0,skipped=0;
+      for(const [draftId,photoRows] of byDraft){
+        let localPhotos=await getPhotosForDraft(draftId);
+        let localById=new Map(localPhotos.map(p=>[String(p.id),p]));
+
+        // Apply Cloud deletion tombstones first.
+        for(const row of photoRows.filter(r=>r.is_deleted===true)){
+          const id=String(row.id);
+          if(localById.has(id)){
+            await deletePhotoById(id);
+            localById.delete(id);
+            deleted++;
+          }
+          const localDelete=localTombstones[id];
+          if(localDelete && isoTime(row.updated_at)>=isoTime(localDelete.deleted_at)){
+            delete localTombstones[id];
+          }
+        }
+
+        // Download active rows only when there is no newer local delete tombstone.
+        for(const row of photoRows.filter(r=>r.is_deleted!==true)){
+          const id=String(row.id);
+          const localDelete=localTombstones[id];
+          if(localDelete && isoTime(localDelete.deleted_at)>=isoTime(row.updated_at)){
+            skipped++;
+            continue;
+          }
+          if(localById.has(id)){skipped++;continue;}
+          setSync('同步中…',true);
+          const {data:blob,error:downloadError}=await deskSupabase.storage
+            .from(DESK_ORIGINALS_BUCKET)
+            .download(String(row.storage_key));
+          if(downloadError) throw downloadError;
+          if(!(blob instanceof Blob)) throw new Error('Cloud 原圖下載結果不是 Blob');
+          await putCloudPhotoIntoLocalStore(row,blob);
+          localById.set(id,row);
+          downloaded++;
+        }
+
+        const currentPhotos=await getPhotosForDraft(draftId);
+        const draftIndex=drafts.findIndex(d=>String(d.id)===draftId);
+        if(draftIndex!==-1) drafts[draftIndex]={...drafts[draftIndex],photo_count:currentPhotos.length};
+      }
+
+      writePhotoTombstones(localTombstones);
+      if(byDraft.size){writeDrafts(drafts);renderDrafts();}
+      if(currentDraftId && byDraft.has(String(currentDraftId))) await renderDetailPhotos(String(currentDraftId));
+
+      if(downloaded||deleted){
+        setSync('✓ 已同步',true);
+        if(!quiet){
+          const parts=[];
+          if(downloaded) parts.push(`下載 ${downloaded} 張`);
+          if(deleted) parts.push(`移除 ${deleted} 張`);
+          demoSave(`原圖已更新：${parts.join(' · ')}`);
+        }
+      }else{
+        setSync('✓ 已同步',true);
+        if(!quiet) demoSave('Cloud 原圖已是最新');
+      }
+      console.log('Desk Lah! Cloud original photo state pull',{reason,downloaded,deleted,skipped,metadataRows:(rows||[]).length});
+      return {downloaded,deleted,skipped,total:(rows||[]).length};
+    }catch(error){
+      console.error('Desk Lah! Cloud original photo pull failed.',error);
+      setSync('同步失敗 · 重試',false);
+      if(!quiet) demoSave(error&&error.message?`原圖同步失敗：${error.message}`:'原圖同步失敗');
+      return null;
+    }finally{
+      cloudPhotoPullInFlight=null;
+    }
+  })();
+  return cloudPhotoPullInFlight;
+}
+
+let cloudPullInFlight=null;
+async function pullDraftsFromCloud({quiet=false,reason='manual'}={}){
+  if(cloudPullInFlight) return cloudPullInFlight;
+  cloudPullInFlight=(async()=>{
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){
+      setSync('需要登入',false);showCloudStep('login');showCloudGate();demoSave('請先登入 Cloud');return;
+    }
+    const tableReady=await checkDeskDraftTable({openGateOnFail:true});
+    if(!tableReady) return;
+    setSync('同步中…',true);
+    const {data:cloudRows,error}=await deskSupabase
+      .from('desk_drafts')
+      .select('id,title,body,created_at,updated_at,is_deleted')
+      .order('updated_at',{ascending:false});
+    if(error) throw error;
+
+    const local=readDrafts();
+    const localMap=new Map(local.map(item=>[String(item.id),{...item}]));
+    const tombstones=readDraftTombstones();
+    const photoCleanup=[];
+    let added=0,updated=0,removed=0,keptLocal=0;
+
+    for(const row of (cloudRows||[])){
+      const id=String(row.id);
+      const cloudTime=isoTime(row.updated_at||row.created_at);
+      const localDraft=localMap.get(id);
+      const localTime=localDraft?isoTime(localDraft.updated_at||localDraft.created_at):0;
+      const tombstoneTime=isoTime(tombstones[id]);
+
+      if(row.is_deleted===true){
+        if(localDraft && cloudTime>=localTime){
+          localMap.delete(id);
+          photoCleanup.push(id);
+          removed++;
+        }
+        if(cloudTime>=tombstoneTime) tombstones[id]=row.updated_at||new Date().toISOString();
+        continue;
+      }
+
+      // A local deletion newer than this Cloud row wins, so an auto pull cannot resurrect it.
+      if(tombstoneTime && tombstoneTime>=cloudTime){
+        keptLocal++;
+        continue;
+      }
+
+      if(!localDraft){
+        localMap.set(id,{
+          id,
+          title:String(row.title||''),
+          body:String(row.body||''),
+          created_at:row.created_at||row.updated_at||new Date().toISOString(),
+          updated_at:row.updated_at||row.created_at||new Date().toISOString(),
+          photo_count:0
+        });
+        if(tombstones[id]) delete tombstones[id];
+        added++;
+        continue;
+      }
+
+      if(cloudTime>localTime){
+        // Photo count remains a local UI field; Cloud photo truth lives in draft_photos metadata.
+        localMap.set(id,{
+          ...localDraft,
+          title:String(row.title||''),
+          body:String(row.body||''),
+          created_at:row.created_at||localDraft.created_at,
+          updated_at:row.updated_at||localDraft.updated_at,
+          photo_count:Number(localDraft.photo_count||0)
+        });
+        if(tombstones[id]) delete tombstones[id];
+        updated++;
+      }else{
+        keptLocal++;
+      }
+    }
+
+    const merged=[...localMap.values()];
+    writeDrafts(merged);
+    writeDraftTombstones(tombstones);
+    for(const id of photoCleanup){try{await deletePhotosForDraft(id)}catch(error){console.warn('Cloud tombstone photo cleanup failed.',id,error)}}
+    renderDrafts();
+    setSync('✓ 已同步',true);
+    const changed=added+updated+removed;
+    if(!quiet || changed){
+      demoSave(changed?`Cloud 已更新 · 新增 ${added} · 更新 ${updated}${removed?` · 移除 ${removed}`:''}`:'文字已是最新');
+    }
+    console.log('Desk Lah! Cloud → Local auto pull',{reason,added,updated,removed,keptLocal,total:(cloudRows||[]).length});
+    return {added,updated,removed,keptLocal};
+  }catch(error){
+    console.error('Desk Lah! cloud pull failed.',error);
+    setSync('同步失敗 · 重試',false);
+    if(!quiet) demoSave(error&&error.message?`Cloud 拉取失敗：${error.message}`:'Cloud 拉取失敗');
+    return null;
+  }finally{
+    cloudPullInFlight=null;
+  }
+  })();
+  return cloudPullInFlight;
+}
+
+async function syncDraftDeletionToCloud(draft,deletedAt){
+  if(!draft) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){
+      setSync('需要登入',false);
+      return false;
+    }
+    const tableReady=await checkDeskDraftTable({openGateOnFail:false});
+    if(!tableReady) return false;
+    setSync('同步中…',true);
+    const payload={
+      id:String(draft.id),
+      user_id:user.id,
+      title:String(draft.title||'').trim(),
+      body:String(draft.body||''),
+      created_at:draft.created_at||deletedAt||new Date().toISOString(),
+      updated_at:deletedAt||new Date().toISOString(),
+      is_deleted:true
+    };
+    const {data,error}=await deskSupabase
+      .from('desk_drafts')
+      .upsert(payload,{onConflict:'id'})
+      .select('id,title,updated_at,is_deleted')
+      .single();
+    if(error) throw error;
+    console.log('Desk Lah! delete auto sync:',data);
+    setSync('✓ 已同步',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! delete auto sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    return false;
+  }
+}
+
+async function syncDraftToCloud(draft){
+  if(!draft) return false;
+  try{
+    if(!deskSupabase) createDeskSupabase();
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user){
+      setSync('需要登入',false);
+      return false;
+    }
+    const tableReady=await checkDeskDraftTable({openGateOnFail:false});
+    if(!tableReady) return false;
+    setSync('同步中…',true);
+    const payload={
+      id:String(draft.id),
+      user_id:user.id,
+      title:String(draft.title||'').trim(),
+      body:String(draft.body||''),
+      created_at:draft.created_at||new Date().toISOString(),
+      updated_at:draft.updated_at||draft.created_at||new Date().toISOString(),
+      is_deleted:false
+    };
+    const {data,error}=await deskSupabase
+      .from('desk_drafts')
+      .upsert(payload,{onConflict:'id'})
+      .select('id,title,updated_at')
+      .single();
+    if(error) throw error;
+    console.log('Desk Lah! save auto sync:',data);
+    setSync('✓ 已同步',true);
+    return true;
+  }catch(error){
+    console.error('Desk Lah! save auto sync failed.',error);
+    setSync('同步失敗 · 重試',false);
+    return false;
+  }
+}
+async function saveDraftEdits(){
+  if(!currentDraftId){demoSave('找不到這份稿件');return;}
+  const titleInput=document.getElementById('detailTitleInput');
+  const title=titleInput.value.trim();
+  if(!title){demoSave('稿件名稱必填');titleInput.focus();return;}
+  const drafts=readDrafts();
+  const index=drafts.findIndex(item=>item.id===currentDraftId);
+  if(index===-1){demoSave('找不到這份稿件');renderDrafts();showPage('drafts');return;}
+  drafts[index]={...drafts[index],title,body:document.getElementById('draftText').value,updated_at:new Date().toISOString()};
+  const savedDraft=drafts[index];
+  const savedDraftId=String(savedDraft.id);
+  try{writeDrafts(drafts)}catch(error){console.error('Desk Lah! draft update failed.',error);demoSave('保存失敗');return;}
+  resetConversionUndo();
+  const textSynced=await syncDraftToCloud(savedDraft);
+  // Maintenance hotfix 002: photo repair is independent of the draft text result.
+  // Reconcile local IndexedDB photos against Cloud metadata every time the user saves.
+  const photoRetry=await retryPendingPhotoUploads({draftId:savedDraftId,quiet:true});
+  const photosSynced=Number(photoRetry&&photoRetry.failed||0)===0;
+  currentDraftId=null;
+  renderDrafts();
+  if(textSynced && photosSynced) demoSave('修改已保存');
+  else if(textSynced){
+    demoSave('修改已保存 · 原圖 Cloud 同步失敗');
+    setTimeout(()=>window.alert(`Desk Lah! Photo Sync Diagnostic\n\n${photoCloudDiagnosticText()}`),120);
+  }else demoSave('修改已保存本機 · Cloud 同步失敗');
+  showPage('drafts');
+}
+async function deleteCurrentDraft(){
+  if(!currentDraftId){demoSave('找不到這份稿件');return;}
+  const drafts=readDrafts();
+  const draft=drafts.find(item=>item.id===currentDraftId);
+  if(!draft){demoSave('找不到這份稿件');currentDraftId=null;renderDrafts();showPage('drafts');return;}
+  const ok=window.confirm(`確定刪除「${draft.title}」？
+
+刪除後會直接離開稿件桌。`);
+  if(!ok) return;
+  const deletingId=currentDraftId;
+  const deletingAt=new Date().toISOString();
+  const remaining=drafts.filter(item=>item.id!==deletingId);
+  try{
+    writeDrafts(remaining);
+    markLocalDraftTombstone(deletingId,deletingAt);
+  }catch(error){console.error('Desk Lah! draft delete failed.',error);demoSave('刪除失敗');return;}
+  try{await deletePhotosForDraft(deletingId)}catch(error){console.warn('Draft deleted but local photo cleanup failed.',error)}
+  currentDraftId=null;
+  renderDrafts();
+  showPage('drafts');
+  const synced=await syncDraftDeletionToCloud(draft,deletingAt);
+  demoSave(synced?'稿件已離開桌面':'稿件已離開本機 · Cloud 刪除同步失敗');
+}
+
+function makePhotoPreviewItem(file){
+  return {id:(crypto.randomUUID?crypto.randomUUID():`photo-${Date.now()}-${Math.random().toString(16).slice(2)}`),file,url:URL.createObjectURL(file)};
+}
+function renderSelectedPhotos(){
+  const grid=document.getElementById('draftPhotoPreview');
+  const count=document.getElementById('draftPhotoCount');
+  const clearBtn=document.getElementById('clearDraftPhotosBtn');
+  grid.innerHTML='';
+  selectedPhotoItems.forEach(item=>{
+    const box=document.createElement('div'); box.className='preview-photo';
+    const img=document.createElement('img'); img.src=item.url; img.alt=item.file.name||'原圖預覽';
+    const remove=document.createElement('button'); remove.type='button'; remove.className='preview-remove';
+    remove.setAttribute('aria-label',`移除 ${item.file.name||'這張原圖'}`); remove.textContent='×';
+    remove.addEventListener('click',()=>removeSelectedPhoto(item.id));
+    box.append(img,remove); grid.append(box);
+  });
+  count.textContent=selectedPhotoItems.length?`${selectedPhotoItems.length} 張原圖已選`:'尚未選圖';
+  clearBtn.style.display=selectedPhotoItems.length?'inline':'none';
+}
+function handleDraftPhotoSelection(event){
+  const files=[...(event.target.files||[])];
+  files.filter(file=>file.type.startsWith('image/')).forEach(file=>selectedPhotoItems.push(makePhotoPreviewItem(file)));
+  event.target.value=''; renderSelectedPhotos();
+}
+function removeSelectedPhoto(id){
+  const index=selectedPhotoItems.findIndex(item=>item.id===id); if(index===-1)return;
+  URL.revokeObjectURL(selectedPhotoItems[index].url); selectedPhotoItems.splice(index,1); renderSelectedPhotos();
+}
+function clearSelectedPhotos(){
+  selectedPhotoItems.forEach(item=>URL.revokeObjectURL(item.url)); selectedPhotoItems=[];
+  const input=document.getElementById('draftPhotoInput'); if(input)input.value=''; renderSelectedPhotos();
+}
+function cancelNewDraft(){clearNewDraftForm();showPage('drafts')}
+function clearNewDraftForm(){document.getElementById('draftName').value='';document.getElementById('draftBody').value='';clearSelectedPhotos()}
+async function saveDraft(){
+  const name=document.getElementById('draftName');
+  const body=document.getElementById('draftBody');
+  const title=name.value.trim();
+  if(!title){demoSave('稿件名稱必填');name.focus();return;}
+  const now=new Date().toISOString();
+  const draftId=(crypto.randomUUID?crypto.randomUUID():`draft-${Date.now()}`);
+  const photoCount=selectedPhotoItems.length;
+  try{
+    if(photoCount) await savePhotosForDraft(draftId,selectedPhotoItems);
+  }catch(error){
+    console.error('Desk Lah! original photo save failed.',error);
+    demoSave('原圖保存失敗 · 稿件未保存');
+    return;
+  }
+  const drafts=readDrafts();
+  const savedDraft={id:draftId,title,body:body.value,created_at:now,updated_at:now,photo_count:photoCount};
+  drafts.push(savedDraft);
+  clearLocalDraftTombstone(draftId);
+  try{
+    writeDrafts(drafts);
+  }catch(error){
+    console.error('Desk Lah! draft save failed.',error);
+    if(photoCount){try{await deletePhotosForDraft(draftId)}catch(_){} }
+    demoSave('保存失敗');
+    return;
+  }
+  renderDrafts();
+  clearNewDraftForm();
+  showPage('drafts');
+
+  const textSynced=await syncDraftToCloud(savedDraft);
+  let photoResult={uploaded:0,total:0};
+  if(textSynced && photoCount){
+    photoResult=await syncOriginalPhotosToCloud(draftId,{quiet:true});
+  }
+  if(textSynced && (!photoCount || photoResult)){
+    demoSave('稿件已保存');
+  }else{
+    demoSave(photoCount?`稿件已保存本機 · ${photoCount} 張原圖 · Cloud 同步失敗`:'稿件已保存本機 · Cloud 同步失敗');
+  }
+}
+
+document.getElementById('draftPhotoInput').addEventListener('change',handleDraftPhotoSelection);
+document.getElementById('detailPhotoInput').addEventListener('change',handleDetailPhotoSelection);
+document.getElementById('otTemplatePicker').addEventListener('change',handleOTClaimTemplateSelection);
+renderSelectedPhotos();
+renderDrafts();
+renderOTRecords();
+renderLeaveRecords();
+seedCloudConfigFields();
+
+let lastForegroundPullAt=0;
+async function initializeDeskCloud(){
+  const ready=await checkDeskCloudSession();
+  if(ready){
+    const otReady=await checkDeskOtTable({openGateOnFail:true});
+    if(!otReady) return;
+    const leaveReady=await checkDeskLeaveTables({openGateOnFail:true});
+    if(!leaveReady) return;
+    await retryPendingPhotoDeletions();
+    await retryPendingOTDeletions();
+    await retryPendingLeaveDeletions();
+    await pullDraftsFromCloud({quiet:true,reason:'open'});
+    await pullOriginalPhotosFromCloud({quiet:true,reason:'open'});
+    await retryPendingPhotoUploads({quiet:true});
+    await pullOTRecordsFromCloud({quiet:true,reason:'open'});
+    await pullLeaveRecordsFromCloud({quiet:true,reason:'open'});
+  }
+}
+
+document.addEventListener('visibilitychange',async()=>{
+  if(document.visibilityState!=='visible') return;
+  const now=Date.now();
+  if(now-lastForegroundPullAt<1500) return;
+  lastForegroundPullAt=now;
+  try{
+    const ready=await checkDeskCloudSession();
+    if(ready){
+      await checkDeskOtTable({openGateOnFail:false});
+      await checkDeskLeaveTables({openGateOnFail:false});
+      await retryPendingPhotoDeletions();
+      await retryPendingOTDeletions();
+      await retryPendingLeaveDeletions();
+      await pullDraftsFromCloud({quiet:true,reason:'foreground'});
+      await pullOriginalPhotosFromCloud({quiet:true,reason:'foreground'});
+      await retryPendingPhotoUploads({quiet:true});
+      await pullOTRecordsFromCloud({quiet:true,reason:'foreground'});
+      await pullLeaveRecordsFromCloud({quiet:true,reason:'foreground'});
+    }
+  }catch(error){
+    console.warn('Desk Lah! foreground auto pull skipped.',error);
+  }
+});
+
+initializeDeskCloud();
+
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Desk Lah! service worker registration skipped.',error));
+  });
+}
+
+// ============================================================
+// Forest Studio Work Desk Adapter 004 — Mobile Handoff CSS Fix
+// Added on top of sealed Desk Lah! V1 + PhotoSync Hotfix 004.
+// Adapter 004 fixes the mobile CSS cascade and keeps the already-PASS handoff logic unchanged.
+// Scope: current draft title + text handoff only.
+// Does NOT modify draft save, Cloud Sync, photos, OT, leave, or export.
+// ============================================================
+const FOREST_WORK_DESK_URL_KEY='desk_lah_forest_work_desk_url_v1';
+
+function resolveForestWorkDeskUrl(forceReset=false){
+  if(forceReset) localStorage.removeItem(FOREST_WORK_DESK_URL_KEY);
+  const saved=localStorage.getItem(FOREST_WORK_DESK_URL_KEY);
+  if(saved) return saved;
+  const entered=window.prompt(
+    '第一次連接 Forest Studio Work Desk。\\n\\n請貼上 Work Desk URL：',
+    ''
+  );
+  if(!entered) return '';
+  const url=entered.trim();
+  if(url) localStorage.setItem(FOREST_WORK_DESK_URL_KEY,url);
+  return url;
+}
+
+function sendCurrentDraftToForestWorkDesk(event){
+  const forceReset=Boolean(event&&(event.shiftKey||event.altKey));
+  const targetUrl=resolveForestWorkDeskUrl(forceReset);
+  if(!targetUrl) return;
+
+  let targetOrigin='*';
+  try{
+    const parsed=new URL(targetUrl,location.href);
+    if(parsed.origin&&parsed.origin!=='null') targetOrigin=parsed.origin;
+  }catch(error){
+    console.error('Work Desk URL 無效',error);
+    demoSave('Work Desk URL 無效');
+    localStorage.removeItem(FOREST_WORK_DESK_URL_KEY);
+    return;
+  }
+
+  const title=(document.getElementById('detailTitleInput')?.value||'').trim()||'未命名稿件';
+  const body=document.getElementById('draftText')?.value||'';
+  const win=window.open(targetUrl,'_blank');
+  if(!win){
+    demoSave('瀏覽器阻止了 Work Desk 視窗');
+    return;
+  }
+
+  const transferId=`desk-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+  const payload={
+    type:'FOREST_WORK_DESK_HANDOFF',
+    source:'desk-lah',
+    version:2,
+    transferId,
+    title,
+    body,
+    sentAt:new Date().toISOString()
+  };
+
+  let finished=false;
+  const ackHandler=(messageEvent)=>{
+    const data=messageEvent.data;
+    if(messageEvent.source!==win||!data||data.type!=='FOREST_WORK_DESK_HANDOFF_ACK'||data.transferId!==transferId) return;
+    finished=true;
+    clearInterval(timer);
+    window.removeEventListener('message',ackHandler);
+    demoSave('Work Desk 已接收');
+  };
+  window.addEventListener('message',ackHandler);
+
+  let sent=0;
+  const timer=setInterval(()=>{
+    if(finished){clearInterval(timer);return;}
+    try{win.postMessage(payload,targetOrigin);}catch(error){console.warn('Work Desk handoff retry',error);}
+    sent+=1;
+    if(sent>=8){
+      clearInterval(timer);
+      setTimeout(()=>window.removeEventListener('message',ackHandler),2500);
+    }
+  },350);
+
+  demoSave('已送往 Work Desk');
+}
+
+window.resetForestWorkDeskUrl=function(){
+  localStorage.removeItem(FOREST_WORK_DESK_URL_KEY);
+  demoSave('Work Desk URL 已重設');
+};
+
+</script>
+</body>
+</html>
