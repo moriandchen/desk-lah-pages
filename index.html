@@ -175,14 +175,14 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
       <div class="rowactions desktop-only">
         <button class="convert" type="button" onclick="convertDraftTextToTraditional()">簡 → 繁</button>
         <button class="textbtn" type="button" onclick="copyDraftText()">複製文字</button>
-        <button class="textbtn" id="sendToWorkDeskBtn" type="button" onclick="sendCurrentDraftToForestWorkDesk(event)" title="交給 Forest Studio Work Desk · 按住 Shift 可重新設定 Work Desk URL">Send to Work Desk →</button>
+        <button class="textbtn" id="sendToWorkDeskBtn" type="button" onclick="sendCurrentDraftToForestWorkDesk(event)" title="透過 Desk Lah! Cloud 送到 Forest Studio Work Desk">Send to Work Desk →</button>
         <button class="textbtn quiet" id="undoConversionBtn" type="button" onclick="undoDraftTextConversion()" style="display:none">撤銷本次轉換</button>
       </div>
       <div class="detail-savebar"><button class="textbtn" onclick="saveDraftEdits()">保存修改</button></div>
       <div class="mobile-workdesk-handoff">
         <button class="mobile-workdesk-btn" type="button"
           onclick="sendCurrentDraftToForestWorkDesk(event)"
-          title="送到 Forest Studio Work Desk">送到 Work Desk →</button>
+          title="透過 Cloud 送到 Forest Studio Work Desk">送到 Work Desk →</button>
       </div>
     </div>
     <div>
@@ -326,6 +326,7 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
+// REMOTE_HANDOFF_007
 const pages=[...document.querySelectorAll('.page')], nav=[...document.querySelectorAll('nav button')];
 const DRAFT_STORAGE_KEY='deskLahDraftsV1';
 const PHOTO_DB_NAME='deskLahLocalPhotosV1';
@@ -3208,92 +3209,101 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
 }
 
 // ============================================================
-// Forest Studio Work Desk Adapter 004 — Mobile Handoff CSS Fix
-// Added on top of sealed Desk Lah! V1 + PhotoSync Hotfix 004.
-// Adapter 004 fixes the mobile CSS cascade and keeps the already-PASS handoff logic unchanged.
-// Scope: current draft title + text handoff only.
+// Forest Studio Desk Lah! Remote Handoff 007
+// P0 production path:
+// Desk Lah! -> Supabase workdesk_handoffs -> desktop Work Desk.
+// Scope stays intentionally small: current draft title + text snapshot only.
 // Does NOT modify draft save, Cloud Sync, photos, OT, leave, or export.
 // ============================================================
-const FOREST_WORK_DESK_URL_KEY='desk_lah_forest_work_desk_url_v1';
+let workDeskHandoffInFlight=false;
 
-function resolveForestWorkDeskUrl(forceReset=false){
-  if(forceReset) localStorage.removeItem(FOREST_WORK_DESK_URL_KEY);
-  const saved=localStorage.getItem(FOREST_WORK_DESK_URL_KEY);
-  if(saved) return saved;
-  const entered=window.prompt(
-    '第一次連接 Forest Studio Work Desk。\\n\\n請貼上 Work Desk URL：',
-    ''
-  );
-  if(!entered) return '';
-  const url=entered.trim();
-  if(url) localStorage.setItem(FOREST_WORK_DESK_URL_KEY,url);
-  return url;
+function setWorkDeskHandoffButtonsBusy(busy){
+  const buttons=[
+    document.getElementById('sendToWorkDeskBtn'),
+    ...document.querySelectorAll('.mobile-workdesk-btn')
+  ].filter(Boolean);
+  buttons.forEach(button=>{
+    button.disabled=!!busy;
+    if(busy){
+      if(!button.dataset.originalLabel) button.dataset.originalLabel=button.textContent;
+      button.textContent='Sending…';
+    }else{
+      button.textContent=button.dataset.originalLabel||button.textContent;
+      delete button.dataset.originalLabel;
+    }
+  });
 }
 
-function sendCurrentDraftToForestWorkDesk(event){
-  const forceReset=Boolean(event&&(event.shiftKey||event.altKey));
-  const targetUrl=resolveForestWorkDeskUrl(forceReset);
-  if(!targetUrl) return;
+async function sendCurrentDraftToForestWorkDesk(){
+  if(workDeskHandoffInFlight) return;
 
-  let targetOrigin='*';
-  try{
-    const parsed=new URL(targetUrl,location.href);
-    if(parsed.origin&&parsed.origin!=='null') targetOrigin=parsed.origin;
-  }catch(error){
-    console.error('Work Desk URL 無效',error);
-    demoSave('Work Desk URL 無效');
-    localStorage.removeItem(FOREST_WORK_DESK_URL_KEY);
+  const draftId=String(currentDraftId||'').trim();
+  if(!draftId){
+    demoSave('找不到這份稿件');
     return;
   }
 
   const title=(document.getElementById('detailTitleInput')?.value||'').trim()||'未命名稿件';
   const body=document.getElementById('draftText')?.value||'';
-  const win=window.open(targetUrl,'_blank');
-  if(!win){
-    demoSave('瀏覽器阻止了 Work Desk 視窗');
-    return;
-  }
 
-  const transferId=`desk-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
-  const payload={
-    type:'FOREST_WORK_DESK_HANDOFF',
-    source:'desk-lah',
-    version:2,
-    transferId,
-    title,
-    body,
-    sentAt:new Date().toISOString()
-  };
+  workDeskHandoffInFlight=true;
+  setWorkDeskHandoffButtonsBusy(true);
 
-  let finished=false;
-  const ackHandler=(messageEvent)=>{
-    const data=messageEvent.data;
-    if(messageEvent.source!==win||!data||data.type!=='FOREST_WORK_DESK_HANDOFF_ACK'||data.transferId!==transferId) return;
-    finished=true;
-    clearInterval(timer);
-    window.removeEventListener('message',ackHandler);
-    demoSave('Work Desk 已接收');
-  };
-  window.addEventListener('message',ackHandler);
-
-  let sent=0;
-  const timer=setInterval(()=>{
-    if(finished){clearInterval(timer);return;}
-    try{win.postMessage(payload,targetOrigin);}catch(error){console.warn('Work Desk handoff retry',error);}
-    sent+=1;
-    if(sent>=8){
-      clearInterval(timer);
-      setTimeout(()=>window.removeEventListener('message',ackHandler),2500);
+  try{
+    const ready=await checkDeskCloudSession();
+    if(!ready){
+      demoSave('請先連接 Desk Lah! Cloud');
+      return;
     }
-  },350);
 
-  demoSave('已送往 Work Desk');
+    if(!deskSupabase) createDeskSupabase();
+
+    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
+    if(userError) throw userError;
+    const user=userData&&userData.user;
+    if(!user) throw new Error('auth-session-missing');
+
+    const payload={
+      user_id:user.id,
+      draft_id:draftId,
+      title,
+      body,
+      photos:[]
+    };
+
+    const {data,error}=await deskSupabase
+      .from('workdesk_handoffs')
+      .insert(payload)
+      .select('id,status,created_at')
+      .single();
+
+    if(error) throw error;
+
+    console.log('Desk Lah! remote handoff queued:',data);
+    demoSave('已送到 Work Desk Cloud Inbox');
+
+    const buttons=[
+      document.getElementById('sendToWorkDeskBtn'),
+      ...document.querySelectorAll('.mobile-workdesk-btn')
+    ].filter(Boolean);
+    buttons.forEach(button=>button.textContent='Sent ✓');
+    setTimeout(()=>setWorkDeskHandoffButtonsBusy(false),1600);
+
+  }catch(error){
+    console.error('Desk Lah! remote Work Desk handoff failed.',error);
+    const message=String(error&&error.message||'');
+    if(/workdesk_handoffs|relation|schema cache/i.test(message)){
+      demoSave('Work Desk Cloud Inbox 尚未就緒');
+    }else if(/auth|session|jwt/i.test(message)){
+      demoSave('Cloud 登入已失效 · 請重新登入');
+    }else{
+      demoSave('送往 Work Desk 失敗 · 請重試');
+    }
+    setWorkDeskHandoffButtonsBusy(false);
+  }finally{
+    workDeskHandoffInFlight=false;
+  }
 }
-
-window.resetForestWorkDeskUrl=function(){
-  localStorage.removeItem(FOREST_WORK_DESK_URL_KEY);
-  demoSave('Work Desk URL 已重設');
-};
 
 </script>
 </body>
