@@ -33,7 +33,7 @@ header{padding:24px 32px 18px;border-bottom:1px solid var(--rule)}
 .brandrow{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
 .brand{display:flex;gap:14px;align-items:center}.logo{width:62px;height:48px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .brand h1{font:700 29px Georgia,serif;margin:0;letter-spacing:-.02em}.tag{margin:3px 0 0;color:var(--muted);font-size:12.5px}
-.sync{font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--ok);padding-top:5px;white-space:nowrap;cursor:pointer;user-select:none}
+.sync{font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--ok);padding-top:5px;white-space:nowrap}
 nav{display:flex;gap:26px;margin-top:18px}nav button{border:0;background:none;padding:8px 0;color:var(--muted);border-bottom:2px solid transparent;font-weight:700}nav button.active{color:var(--ink);border-bottom-color:var(--accent)}
 main{padding:32px}.page{display:none}.page.active{display:block}
 .toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:20px}.eyebrow{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent);letter-spacing:.09em}.toolbar h2,.detail h2{font:26px Georgia,serif;margin:4px 0 0}.sub{font-size:12.5px;color:var(--muted);margin-top:6px}
@@ -56,7 +56,7 @@ input,textarea,select{width:100%;border:0;border-bottom:1px solid var(--rule);ba
 .monthbar{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:13px 2px}.month{font:18px Georgia,serif}.book-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .attendance-tabs{display:flex;gap:26px;border-bottom:1px solid var(--rule);margin-bottom:18px}.subtab{border:0;background:none;padding:9px 1px;color:var(--muted);font-weight:700;border-bottom:2px solid transparent;margin-bottom:-1px}.subtab.active{color:var(--ink);border-bottom-color:var(--accent)}.book{display:none}.book.active{display:block}
 .ot,.leave-row{display:grid;grid-template-columns:92px 1fr auto;gap:22px;padding:18px 4px;border-bottom:1px solid var(--rule);align-items:center}.ot{cursor:pointer;transition:.16s}.ot:hover{padding-left:11px;background:rgba(255,255,255,.42)}.otdate{font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}.otmain strong,.leave-main strong{font-size:14px}.otmain div,.leave-main div{font-size:12.5px;color:var(--muted);margin-top:4px}.ottime{font:12px ui-monospace,SFMono-Regular,Consolas,monospace}.note{font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.6}.monthnav{border:0;background:none;color:var(--muted);padding:4px 8px;font-size:18px;line-height:1}.monthnav:hover{color:var(--ink)}.monthwrap{display:flex;align-items:center;gap:7px}.ot-empty{text-align:center;color:var(--muted);font-size:12.5px;padding:55px 10px;border-bottom:1px solid var(--rule)}.ot-local-badge{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--tech);letter-spacing:.06em}.ot-delete{margin-top:32px;padding-top:14px;border-top:1px solid var(--rule);text-align:right}
-.leave-summary{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:30px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:18px 2px}.leave-year{font:18px Georgia,serif}.balance-line{display:flex;gap:34px;font-size:12.5px}.balance-line div{display:flex;gap:8px;align-items:baseline}.balance-line strong{font:600 18px Georgia,serif}.remain,.minus{color:var(--accent)}.plus{color:var(--tech)}.minus,.plus{font:700 13px ui-monospace,SFMono-Regular,Consolas,monospace}.leave-row{cursor:pointer;transition:.16s}.leave-row:hover{padding-left:11px;background:rgba(255,255,255,.42)}.leave-empty{text-align:center;color:var(--muted);font-size:12.5px;padding:55px 10px;border-bottom:1px solid var(--rule)}.leave-local-badge{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--tech);letter-spacing:.06em}.leave-delete{margin-top:32px;padding-top:14px;border-top:1px solid var(--rule);text-align:right}
+.leave-summary{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:30px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:18px 2px}.leave-year{font:18px Georgia,serif}.balance-line{display:flex;gap:34px;font-size:12.5px}.balance-line div{display:flex;gap:8px;align-items:baseline}.balance-line strong{font:600 18px Georgia,serif}.remain,.minus{color:var(--accent)}.plus{color:var(--tech)}.minus,.plus{font:700 13px ui-monospace,SFMono-Regular,Consolas,monospace}.leave-row{cursor:pointer;transition:.16s;padding:12px 4px;gap:18px;min-height:56px}.leave-row:hover{padding-left:11px;background:rgba(255,255,255,.42)}.leave-main{min-width:0}.leave-main strong{display:block;line-height:1.25}.leave-main div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35;margin-top:3px}.leave-row .minus,.leave-row .plus{justify-self:end;white-space:nowrap}.leave-empty{text-align:center;color:var(--muted);font-size:12.5px;padding:55px 10px;border-bottom:1px solid var(--rule)}.leave-local-badge{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--tech);letter-spacing:.06em}.leave-delete{margin-top:32px;padding-top:14px;border-top:1px solid var(--rule);text-align:right}
 .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}.timepair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}.timepair span{padding-bottom:10px;color:var(--muted)}
 footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--muted)}
 .toast{position:fixed;right:24px;bottom:24px;background:var(--ink);color:#fff;padding:12px 16px;font-size:12px;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateY(0)}
@@ -66,14 +66,7 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
 .cloud-gate{position:fixed;inset:0;background:rgba(38,42,43,.48);display:none;place-items:center;padding:22px;z-index:60;backdrop-filter:blur(3px)}
 .cloud-gate.show{display:grid}.cloud-card{width:min(560px,96vw);max-height:92vh;overflow:auto;background:var(--paper2);border:1px solid var(--rule);box-shadow:0 22px 70px rgba(0,0,0,.22);padding:28px}.cloud-card h2{font:26px Georgia,serif;margin:4px 0 8px}.cloud-card .cloud-step{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent);letter-spacing:.09em}.cloud-card .cloud-help{font-size:12.5px;color:var(--muted);line-height:1.65;margin:0 0 22px}.cloud-card .cloud-actions{display:flex;justify-content:flex-end;gap:12px;align-items:center;margin-top:18px}.cloud-card .cloud-error{min-height:18px;color:var(--accent);font-size:12px;margin-top:12px}.cloud-card .cloud-success{color:var(--ok)}.cloud-card code{font:11.5px ui-monospace,SFMono-Regular,Consolas,monospace;background:#EEE8DD;padding:2px 5px}.cloud-sql{width:100%;min-height:260px;border:1px solid var(--rule);background:#F4F0E7;padding:12px;font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;resize:vertical}.cloud-test{font-size:11.5px;color:var(--tech);border:1px solid var(--rule);background:transparent;padding:8px 10px;border-radius:2px}.cloud-test:hover{border-color:var(--tech)}.toolbar-actions{display:flex;gap:12px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.cloud-divider{height:1px;background:var(--rule);margin:24px 0}.cloud-mini{font-size:11px;color:var(--muted);line-height:1.6}.cloud-user{font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-top:8px;word-break:break-all}
 @media(max-width:760px){
-  body{background:var(--paper2)}.app{width:100%;margin:0;border:0;min-height:100vh;box-shadow:none}.tag{display:none}header{padding:18px}.brand h1{font-size:24px}.logo{width:52px}main{padding:22px 18px}.toolbar{align-items:center}.toolbar h2{font-size:24px}.detailgrid,.twocol{grid-template-columns:1fr}.detailgrid{gap:28px}.ot,.leave-row{grid-template-columns:65px 1fr;gap:12px}.ottime,.leave-row .minus,.leave-row .plus{grid-column:2}.leave-summary{grid-template-columns:1fr auto;gap:14px}.balance-line{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:10px;flex-wrap:wrap}.book-actions{gap:8px}.desktop-only{display:none!important}.mobile-only{display:inline}.photos{grid-template-columns:repeat(4,1fr)}.preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.preview-remove{display:grid}.primary{padding:10px 13px}
-  .mobile-workdesk-handoff{
-    display:flex!important;
-    justify-content:flex-end;
-    margin-top:18px;
-    padding-top:16px;
-    border-top:1px solid var(--rule);
-  }
+  body{background:var(--paper2)}.app{width:100%;margin:0;border:0;min-height:100vh;box-shadow:none}.tag{display:none}header{padding:18px}.brand h1{font-size:24px}.logo{width:52px}main{padding:22px 18px}.toolbar{align-items:center}.toolbar h2{font-size:24px}.detailgrid,.twocol{grid-template-columns:1fr}.detailgrid{gap:28px}.ot{grid-template-columns:65px 1fr;gap:12px}.ottime{grid-column:2}.leave-row{grid-template-columns:72px minmax(0,1fr) auto;gap:10px;padding:11px 4px;min-height:54px}.leave-row .minus,.leave-row .plus{grid-column:3;grid-row:1;justify-self:end;align-self:center}.leave-summary{grid-template-columns:1fr auto;gap:14px}.balance-line{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:10px;flex-wrap:wrap}.book-actions{gap:8px}.desktop-only{display:none!important}.mobile-only{display:inline}.photos{grid-template-columns:repeat(4,1fr)}.preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.preview-remove{display:grid}.primary{padding:10px 13px}
 }
 /* Phase 2.7: Desktop in-place Simplified → Traditional + session undo + copy text. */
 .detail-photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -96,17 +89,6 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
 .detail-title-input{width:100%;border:0;border-bottom:1px solid transparent;background:transparent;padding:2px 0 4px;color:var(--ink);font:26px Georgia,serif;outline:none}
 .detail-title-input:focus{border-bottom-color:var(--rule)}
 .detail-savebar{display:flex;justify-content:flex-end;margin-top:14px}
-.mobile-workdesk-handoff{display:none}
-.mobile-workdesk-btn{
-  border:1px solid var(--rule);
-  background:transparent;
-  color:var(--tech);
-  padding:10px 13px;
-  border-radius:2px;
-  font-size:13px;
-  font-weight:600;
-}
-.mobile-workdesk-btn:active{transform:translateY(1px)}
 
 </style>
 </head>
@@ -131,7 +113,7 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
       </div>
       <div><h1>Desk Lah!</h1><p class="tag">把手機裡的工作，帶回桌面。</p></div>
     </div>
-    <div class="sync quiet" id="syncState" role="button" tabindex="0" title="Cloud 連線設定" onclick="openDeskCloudPanel()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDeskCloudPanel()}">CLOUD SETUP</div>
+    <div class="sync quiet" id="syncState">CLOUD SETUP</div>
   </div>
   <nav><button class="active" data-page="drafts">稿件桌</button><button data-page="attendance">出勤簿</button></nav>
 </header>
@@ -175,15 +157,9 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
       <div class="rowactions desktop-only">
         <button class="convert" type="button" onclick="convertDraftTextToTraditional()">簡 → 繁</button>
         <button class="textbtn" type="button" onclick="copyDraftText()">複製文字</button>
-        <button class="textbtn" id="sendToWorkDeskBtn" type="button" onclick="sendCurrentDraftToForestWorkDesk(event)" title="透過 Desk Lah! Cloud 送到 Forest Studio Work Desk">Send to Work Desk →</button>
         <button class="textbtn quiet" id="undoConversionBtn" type="button" onclick="undoDraftTextConversion()" style="display:none">撤銷本次轉換</button>
       </div>
       <div class="detail-savebar"><button class="textbtn" onclick="saveDraftEdits()">保存修改</button></div>
-      <div class="mobile-workdesk-handoff">
-        <button class="mobile-workdesk-btn" type="button"
-          onclick="sendCurrentDraftToForestWorkDesk(event)"
-          title="透過 Cloud 送到 Forest Studio Work Desk">送到 Work Desk →</button>
-      </div>
     </div>
     <div>
       <div class="section">原圖</div>
@@ -267,7 +243,7 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
     <div id="cloudConfigStep">
       <div class="field"><label>Supabase Project URL</label><input id="cloudUrl" type="url" autocomplete="off" placeholder="https://xxxx.supabase.co"></div>
       <div class="field"><label>Publishable / public anon key</label><textarea id="cloudAnonKey" style="min-height:100px" autocomplete="off" placeholder="只貼 Publishable / public anon key；不要使用 secret / service_role key。"></textarea></div>
-      <p class="cloud-mini">Desk Lah! 現在使用獨立的 Supabase Project。請填入 <code>forest-studio-desk-lah</code> 的 Project URL 與 Publishable key；不要使用 secret / service_role key。</p>
+      <p class="cloud-mini">建議直接使用 Forest OS 現有的 Supabase 專案，之後 Desk Lah! 只建立自己的 <code>desk_*</code> tables。這樣仍然是同一個登入帳號，但資料結構分開。</p>
       <div class="cloud-actions"><button class="primary" type="button" onclick="saveCloudConfig()">保存連線設定</button></div>
     </div>
 
@@ -315,7 +291,7 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
       <p class="cloud-help cloud-success">✓ Cloud 已連接</p>
       <div id="cloudUserText" class="cloud-user"></div>
       <p class="cloud-mini">稿件與原圖會自動同步。平常不需要手動處理同步。</p>
-      <div class="cloud-actions"><button class="textbtn quiet" type="button" onclick="switchDeskCloudProject()">切換 Cloud</button><button class="primary" type="button" onclick="closeCloudGate()">進入 Desk Lah!</button></div>
+      <div class="cloud-actions"><button class="textbtn quiet" type="button" onclick="signOutDeskCloud()">登出</button><button class="primary" type="button" onclick="closeCloudGate()">進入 Desk Lah!</button></div>
     </div>
     <div id="cloudMessage" class="cloud-error"></div>
   </div>
@@ -326,7 +302,6 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
-// REMOTE_HANDOFF_007
 const pages=[...document.querySelectorAll('.page')], nav=[...document.querySelectorAll('nav button')];
 const DRAFT_STORAGE_KEY='deskLahDraftsV1';
 const PHOTO_DB_NAME='deskLahLocalPhotosV1';
@@ -620,43 +595,6 @@ function getCloudConfig(){
 }
 function showCloudGate(){cloudEls().gate.classList.add('show')}
 function closeCloudGate(){cloudEls().gate.classList.remove('show')}
-async function openDeskCloudPanel(){
-  seedCloudConfigFields();
-  const cfg=getCloudConfig();
-  if(!cfg.url||!cfg.anon){
-    showCloudStep('config');
-    setCloudMessage('請設定 Desk Lah! 專用 Supabase 連線。');
-    showCloudGate();
-    return;
-  }
-  try{
-    if(!deskSupabase) createDeskSupabase();
-    const {data,error}=await deskSupabase.auth.getSession();
-    if(error) throw error;
-    const user=data&&data.session&&data.session.user;
-    if(user){
-      cloudEls().userText.textContent=user.email||user.id||'Signed in';
-      showCloudStep('ready');
-      setCloudMessage('Cloud 已連接。',true);
-    }else{
-      showCloudStep('login');
-      setCloudMessage('請登入 Desk Lah! Cloud。');
-    }
-  }catch(error){
-    showCloudStep('config');
-    setCloudMessage('目前 Cloud 連線無法使用，請重新設定。');
-  }
-  showCloudGate();
-}
-async function switchDeskCloudProject(){
-  const ok=window.confirm('只會切換 Cloud 連線設定；本機稿件與資料不會被刪除。繼續？');
-  if(!ok) return;
-  if(deskSupabase){try{await deskSupabase.auth.signOut()}catch(error){console.warn(error)}}
-  resetCloudConfig();
-  seedCloudConfigFields();
-  setCloudMessage('請輸入新的 Desk Lah! Supabase Project URL 與 Publishable key。');
-  showCloudGate();
-}
 function showCloudStep(step){
   const els=cloudEls();
   els.config.style.display=step==='config'?'block':'none';
@@ -738,6 +676,14 @@ async function recheckDeskStorage(){
   const ok=await checkDeskStorageBucket({openGateOnFail:false});
   if(ok){
     localStorage.setItem(STORAGE_SETUP_ACK_KEY,'1');
+    // A freshly reconnected device may already have draft text but no local
+    // IndexedDB photo cache. Pull the Cloud originals immediately instead of
+    // waiting for the next full app reload / visibility cycle.
+    await pullDraftsFromCloud({quiet:true,reason:'storage-recheck'});
+    await pullOriginalPhotosFromCloud({quiet:true,reason:'storage-recheck'});
+    await retryPendingPhotoUploads({quiet:true});
+    setSync('✓ 已同步',true);
+    setCloudMessage('Cloud 已就緒，原圖已重新同步。',true);
   }
 }
 async function checkDeskPhotoTable({openGateOnFail=true}={}){
@@ -986,16 +932,27 @@ async function signInDeskCloud(){
     const tableReady=await checkDeskDraftTable();
     if(tableReady){
       await pullDraftsFromCloud({quiet:true,reason:'sign-in'});
+
+      // Do not stop after pulling text. A newly configured / reconnected
+      // device has an empty IndexedDB photo cache, so verify Storage and pull
+      // Cloud originals during the same sign-in flow.
+      const storageReady=await checkDeskStorageBucket({openGateOnFail:true});
+      if(storageReady){
+        localStorage.setItem(STORAGE_SETUP_ACK_KEY,'1');
+        await pullOriginalPhotosFromCloud({quiet:true,reason:'sign-in'});
+        await retryPendingPhotoUploads({quiet:true});
+      }
+
       const otReady=await checkDeskOtTable({openGateOnFail:true});
       if(otReady) await pullOTRecordsFromCloud({quiet:true,reason:'sign-in'});
       const leaveReady=await checkDeskLeaveTables({openGateOnFail:true});
       if(leaveReady) await pullLeaveRecordsFromCloud({quiet:true,reason:'sign-in'});
-      setSync('同步失敗 · 重試',false);
-      showCloudStep('storage');
-      const box=document.getElementById('cloudStorageSqlText');
-      if(box) box.value=DESK_STORAGE_SQL;
-      setCloudMessage('Cloud 原圖儲存尚未完成，請檢查 Supabase 設定。');
-      showCloudGate();
+
+      if(storageReady){
+        setSync('✓ 已同步',true);
+        showCloudStep('ready');
+        setCloudMessage('Cloud 已就緒，文字與原圖已同步。',true);
+      }
     }
   }catch(error){
     console.error('Desk Lah! sign in failed.',error);
@@ -1626,8 +1583,9 @@ function renderLeaveRecords(){
     const strong=document.createElement('strong');
     strong.textContent=formatLeaveType(record.type);
     const note=document.createElement('div');
-    note.textContent=record.note||`${record.days} 天`;
-    main.append(strong,note);
+    note.textContent=record.note||'';
+    main.append(strong);
+    if(record.note) main.append(note);
 
     const amount=document.createElement('div');
     const isEarn=record.type==='replacement_earn';
@@ -3207,104 +3165,6 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
     navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Desk Lah! service worker registration skipped.',error));
   });
 }
-
-// ============================================================
-// Forest Studio Desk Lah! Remote Handoff 007
-// P0 production path:
-// Desk Lah! -> Supabase workdesk_handoffs -> desktop Work Desk.
-// Scope stays intentionally small: current draft title + text snapshot only.
-// Does NOT modify draft save, Cloud Sync, photos, OT, leave, or export.
-// ============================================================
-let workDeskHandoffInFlight=false;
-
-function setWorkDeskHandoffButtonsBusy(busy){
-  const buttons=[
-    document.getElementById('sendToWorkDeskBtn'),
-    ...document.querySelectorAll('.mobile-workdesk-btn')
-  ].filter(Boolean);
-  buttons.forEach(button=>{
-    button.disabled=!!busy;
-    if(busy){
-      if(!button.dataset.originalLabel) button.dataset.originalLabel=button.textContent;
-      button.textContent='Sending…';
-    }else{
-      button.textContent=button.dataset.originalLabel||button.textContent;
-      delete button.dataset.originalLabel;
-    }
-  });
-}
-
-async function sendCurrentDraftToForestWorkDesk(){
-  if(workDeskHandoffInFlight) return;
-
-  const draftId=String(currentDraftId||'').trim();
-  if(!draftId){
-    demoSave('找不到這份稿件');
-    return;
-  }
-
-  const title=(document.getElementById('detailTitleInput')?.value||'').trim()||'未命名稿件';
-  const body=document.getElementById('draftText')?.value||'';
-
-  workDeskHandoffInFlight=true;
-  setWorkDeskHandoffButtonsBusy(true);
-
-  try{
-    const ready=await checkDeskCloudSession();
-    if(!ready){
-      demoSave('請先連接 Desk Lah! Cloud');
-      return;
-    }
-
-    if(!deskSupabase) createDeskSupabase();
-
-    const {data:userData,error:userError}=await deskSupabase.auth.getUser();
-    if(userError) throw userError;
-    const user=userData&&userData.user;
-    if(!user) throw new Error('auth-session-missing');
-
-    const payload={
-      user_id:user.id,
-      draft_id:draftId,
-      title,
-      body,
-      photos:[]
-    };
-
-    const {data,error}=await deskSupabase
-      .from('workdesk_handoffs')
-      .insert(payload)
-      .select('id,status,created_at')
-      .single();
-
-    if(error) throw error;
-
-    console.log('Desk Lah! remote handoff queued:',data);
-    demoSave('已送到 Work Desk Cloud Inbox');
-
-    const buttons=[
-      document.getElementById('sendToWorkDeskBtn'),
-      ...document.querySelectorAll('.mobile-workdesk-btn')
-    ].filter(Boolean);
-    buttons.forEach(button=>button.textContent='Sent ✓');
-    setTimeout(()=>setWorkDeskHandoffButtonsBusy(false),1600);
-
-  }catch(error){
-    console.error('Desk Lah! remote Work Desk handoff failed.',error);
-    const message=String(error&&error.message||'');
-    if(/workdesk_handoffs|relation|schema cache/i.test(message)){
-      demoSave('Work Desk Cloud Inbox 尚未就緒');
-    }else if(/auth|session|jwt/i.test(message)){
-      demoSave('Cloud 登入已失效 · 請重新登入');
-    }else{
-      demoSave('送往 Work Desk 失敗 · 請重試');
-    }
-    setWorkDeskHandoffButtonsBusy(false);
-  }finally{
-    workDeskHandoffInFlight=false;
-  }
-}
-
 </script>
 </body>
 </html>
