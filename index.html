@@ -680,10 +680,15 @@ async function recheckDeskStorage(){
     // IndexedDB photo cache. Pull the Cloud originals immediately instead of
     // waiting for the next full app reload / visibility cycle.
     await pullDraftsFromCloud({quiet:true,reason:'storage-recheck'});
-    await pullOriginalPhotosFromCloud({quiet:true,reason:'storage-recheck'});
-    await retryPendingPhotoUploads({quiet:true});
-    setSync('✓ 已同步',true);
-    setCloudMessage('Cloud 已就緒，原圖已重新同步。',true);
+    const photoPull=await pullOriginalPhotosFromCloud({quiet:true,reason:'storage-recheck'});
+    const photoRetry=await retryPendingPhotoUploads({quiet:true});
+    if(photoPull && Number(photoRetry&&photoRetry.failed||0)===0){
+      setSync('✓ 已同步',true);
+      setCloudMessage('Cloud 已就緒，原圖已重新同步。',true);
+    }else{
+      setSync('原圖同步失敗 · 重試',false);
+      setCloudMessage('稿件文字已同步，但原圖未能完整下載或補傳。請再次檢查；若仍失敗，請截下這個錯誤提示給我。',false);
+    }
   }
 }
 async function checkDeskPhotoTable({openGateOnFail=true}={}){
@@ -931,6 +936,7 @@ async function signInDeskCloud(){
     setCloudMessage('登入成功。正在連接 Cloud…',true);
     const tableReady=await checkDeskDraftTable();
     if(tableReady){
+      let photoSyncOk=false;
       await pullDraftsFromCloud({quiet:true,reason:'sign-in'});
 
       // Do not stop after pulling text. A newly configured / reconnected
@@ -939,8 +945,9 @@ async function signInDeskCloud(){
       const storageReady=await checkDeskStorageBucket({openGateOnFail:true});
       if(storageReady){
         localStorage.setItem(STORAGE_SETUP_ACK_KEY,'1');
-        await pullOriginalPhotosFromCloud({quiet:true,reason:'sign-in'});
-        await retryPendingPhotoUploads({quiet:true});
+        const photoPull=await pullOriginalPhotosFromCloud({quiet:true,reason:'sign-in'});
+        const photoRetry=await retryPendingPhotoUploads({quiet:true});
+        photoSyncOk=!!photoPull && Number(photoRetry&&photoRetry.failed||0)===0;
       }
 
       const otReady=await checkDeskOtTable({openGateOnFail:true});
@@ -948,10 +955,14 @@ async function signInDeskCloud(){
       const leaveReady=await checkDeskLeaveTables({openGateOnFail:true});
       if(leaveReady) await pullLeaveRecordsFromCloud({quiet:true,reason:'sign-in'});
 
-      if(storageReady){
+      if(storageReady && photoSyncOk){
         setSync('✓ 已同步',true);
         showCloudStep('ready');
         setCloudMessage('Cloud 已就緒，文字與原圖已同步。',true);
+      }else if(storageReady){
+        setSync('原圖同步失敗 · 重試',false);
+        showCloudStep('ready');
+        setCloudMessage('稿件文字已同步，但原圖未能完整下載或補傳。請再次登入重試；若仍失敗，請截下這個錯誤提示給我。',false);
       }
     }
   }catch(error){
