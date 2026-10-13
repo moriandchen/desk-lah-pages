@@ -166,7 +166,8 @@ footer{padding:18px 30px 25px;text-align:center;font-size:10.5px;color:var(--mut
       <div class="detail-photos" id="detailPhotos"></div>
       <div class="detail-photo-empty" id="detailPhotoEmpty">暫時沒有原圖。</div>
       <div class="detail-photo-tools">
-        <div class="detail-photo-meta" id="detailPhotoMeta"></div>
+        <div class="detail-photo-meta" id="detailPhotoMeta" role="status" aria-live="polite"></div>
+        <button class="textbtn" id="retryDraftPhotos" type="button" onclick="retryCurrentDraftPhotos()">檢查並重試這篇原圖同步</button>
         <div class="rowactions">
           <input id="detailPhotoInput" type="file" accept="image/*" multiple>
           <button class="textbtn" type="button" onclick="document.getElementById('detailPhotoInput').click()">＋ 補加原圖</button>
@@ -2101,13 +2102,29 @@ async function renderDetailPhotos(draftId){
       box.append(img,remove); grid.append(box);
     });
     empty.style.display=photos.length?'none':'block';
-    meta.textContent=photos.length?`${photos.length} 張 · 原始檔案保存在本機 IndexedDB`:'0 張原圖';
+    const marked=photos.filter(p=>p.cloud_storage_key).length;
+    meta.textContent=`本機 ${photos.length} 張 · 已有上傳紀錄 ${marked} 張 · 待檢查 ${photos.length-marked} 張（目前雲端狀態可按下方檢查）`;
   }catch(error){
     console.error('Desk Lah! photo read failed.',error);
     empty.textContent='原圖讀取失敗。';
     meta.textContent='';
   }
 }
+
+// Maintenance 008: per-draft repair reuses the proven PhotoRestore 007 path.
+async function retryCurrentDraftPhotos(){
+ const id=currentDraftId;if(!id)return;const b=document.getElementById('retryDraftPhotos');if(b.disabled)return;b.disabled=true;const meta=document.getElementById('detailPhotoMeta');meta.textContent='正在檢查與重試這篇原圖…';
+ try{
+  if(!deskSupabase){demoSave('請先登入 Cloud');return;}
+  const result=await retryPendingPhotoUploads({draftId:String(id),quiet:true});
+  if(currentDraftId!==id)return;
+  await renderDetailPhotos(id);
+  const note=result.failed?'原圖同步仍未完成，可稍後重試。':result.uploaded?'這次已補同步 '+result.uploaded+' 張。':'這篇原圖檢查完成。';
+  meta.textContent+=' · '+note;demoSave(note);
+ }catch(_){if(currentDraftId===id){meta.textContent='檢查未完成，請確認 Cloud 登入與網路。';demoSave('原圖檢查失敗，可重試');}}
+ finally{b.disabled=false;}
+}
+
 function openDetailPhoto(url,name){
   const img=document.getElementById('modalPhoto');
   img.src=url; img.alt=name||'原圖預覽';
@@ -3177,5 +3194,6 @@ if('serviceWorker' in navigator && location.protocol!=='file:'){
   });
 }
 </script>
+<div style="text-align:center;padding:14px;font-size:10px;color:#879184">Desk Lah! V1 Maintenance 008 · 原圖檢查與重試</div>
 </body>
 </html>
